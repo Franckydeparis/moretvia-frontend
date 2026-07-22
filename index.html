@@ -1,0 +1,1400 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morevia.fr</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#3b0764,#5b21b6,#8b5cf6);background-attachment:fixed;color:#fff;min-height:100vh}
+header{padding:16px 20px 20px;text-align:center;background:linear-gradient(135deg,#5b21b6,#8b5cf6)}
+.header-inner{display:flex;align-items:center;justify-content:center;gap:22px;max-width:900px;margin:0 auto}
+.header-logo{width:52px;height:52px;flex-shrink:0}
+.header-text{flex:1;min-width:0}
+header h1{margin:0 0 4px;font-size:2.1rem;font-weight:900;text-shadow:0 6px 20px rgba(0,0,0,.35)}
+header p{font-size:.95rem;opacity:.95;margin:0}
+nav{display:flex;justify-content:center;gap:10px;padding:14px;background:rgba(91,33,182,.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:40;flex-wrap:wrap}
+nav a{color:#fff;text-decoration:none;font-weight:bold;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.95rem;position:relative}
+nav a:hover,nav a.active{background:rgba(255,255,255,.18)}
+nav a .badge{position:absolute;top:-6px;right:-2px;background:#f43f5e;color:#fff;font-size:.65rem;border-radius:9px;padding:1px 6px;font-weight:bold}
+main{max-width:1200px;margin:auto;padding:34px 20px 60px}
+.hero{text-align:center;padding:30px;border-radius:26px;background:rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.25)}
+.hero h2{font-size:2.4rem;margin:0 0 12px}
+.hero p{font-size:1.1rem;line-height:1.6;max-width:850px;margin:auto;opacity:.95}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:32px}
+.action{background:linear-gradient(180deg,#7c3aed,#6d28d9);border:none;border-radius:20px;padding:22px;text-align:center;font-size:1.2rem;font-weight:bold;color:#fff;box-shadow:0 14px 28px rgba(0,0,0,.25);cursor:pointer;transition:.2s}
+.action:hover{transform:translateY(-5px)}
+.section{margin-top:38px}
+.section h3{font-size:1.7rem;margin-bottom:16px}
+.categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.cat{background:rgba(255,255,255,.08);padding:20px;border-radius:16px;text-align:center;border:1px solid rgba(255,255,255,.15);cursor:pointer;transition:.2s}
+.cat-badge{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#fff,#e9d8ff);color:#5b21b6;font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.cat-tag .cat-badge-sm{width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#fff,#e9d8ff);color:#5b21b6;font-weight:900;font-size:.6rem;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-right:5px}
+.page{display:none}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;background:rgba(255,255,255,.08);padding:18px;border-radius:18px;margin-bottom:24px}
+.filters input,.filters select{padding:10px;border-radius:10px;border:none;font-size:.95rem}
+.filters button{background:#fff;color:#5b21b6;font-weight:bold;border:none;border-radius:10px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+.card{background:rgba(255,255,255,.09);border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.15);transition:.2s;cursor:pointer}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 30px rgba(0,0,0,.3)}
+.card img{width:100%;height:150px;object-fit:cover;display:block}
+.card.sold img{filter:grayscale(80%);opacity:.65}
+.sold-badge{position:absolute;top:10px;left:10px;background:#1e0a45;color:#fff;font-weight:900;font-size:.75rem;padding:5px 12px;border-radius:8px;letter-spacing:.03em;text-transform:uppercase}
+.card .body{padding:14px}
+.card .cat-tag{font-size:.72rem;opacity:.8;text-transform:uppercase;letter-spacing:.05em}
+.card h4{margin:4px 0 6px;font-size:1.05rem}
+.card .price{font-size:1.3rem;font-weight:900}
+.card .city{font-size:.8rem;opacity:.85;margin-top:2px}
+.card .row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.iconbtn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 10px;border-radius:9px;font-size:.8rem;cursor:pointer}
+.iconbtn:hover{background:rgba(255,255,255,.28)}
+.iconbtn.fav.active{background:#f43f5e}
+.btn{background:#fff;color:#5b21b6;border:none;padding:12px 20px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:.95rem}
+.btn:hover{opacity:.9}
+.btn.outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}
+form label{display:block;font-size:.8rem;opacity:.85;margin:12px 0 4px;font-weight:bold}
+form input,form select,form textarea{width:100%;padding:11px;border-radius:10px;border:none;font-size:.95rem;font-family:inherit}
+form textarea{min-height:110px;resize:vertical}
+.form-box{background:rgba(255,255,255,.08);padding:26px;border-radius:20px;max-width:640px}
+#preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#preview img{width:80px;height:80px;object-fit:cover;border-radius:10px}
+.upload-zone{border:2px dashed rgba(255,255,255,.4);border-radius:14px;padding:22px;text-align:center;cursor:pointer;margin-top:6px}
+.edit-photo-thumb{position:relative;width:80px;height:80px}
+.edit-photo-thumb img{width:80px;height:80px;object-fit:cover;border-radius:10px;display:block}
+.edit-photo-thumb .rm{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:#f43f5e;color:#fff;border:none;cursor:pointer;font-size:.85rem;line-height:1}
+.upload-zone:hover{background:rgba(255,255,255,.06)}
+.empty{text-align:center;opacity:.75;padding:50px 20px}
+.thread{background:rgba(255,255,255,.08);border-radius:16px;padding:16px;margin-bottom:14px}
+.thread h4{margin:0 0 8px}
+.msg{padding:8px 12px;border-radius:10px;margin-bottom:6px;max-width:75%;font-size:.9rem}
+.msg.visiteur{background:rgba(255,255,255,.18);margin-left:auto;text-align:right}
+.msg.vendeur{background:#7c3aed}
+.msg-input{display:flex;gap:8px;margin-top:10px}
+.msg-input input{flex:1;padding:9px;border-radius:9px;border:none}
+.msg-input button{background:#fff;color:#5b21b6;border:none;border-radius:9px;padding:9px 14px;font-weight:bold;cursor:pointer}
+footer{margin-top:40px;background:linear-gradient(135deg,#5b21b6,#8b5cf6);padding:44px 24px 30px}
+footer .cols{display:flex;justify-content:center;gap:60px;flex-wrap:wrap;max-width:1100px;margin:auto}
+footer h3{font-size:1rem}
+footer a,footer button.linklike{color:#fff;background:none;border:none;cursor:pointer;font-size:.9rem;display:block;padding:3px 0;text-align:left;text-decoration:none;opacity:.9}
+footer a:hover,footer button.linklike:hover{text-decoration:underline}
+footer hr{margin:26px 0;border-color:rgba(255,255,255,.2)}
+.copyright{text-align:center;font-size:.85rem;opacity:.85}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:#4c1d95;border-radius:22px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;padding:30px;position:relative}
+.modal-box.wide{max-width:900px}
+.modal-close{position:absolute;top:14px;right:18px;background:none;border:none;color:#fff;font-size:1.8rem;cursor:pointer}
+.modal-gallery img.main{width:100%;height:280px;object-fit:contain;background:rgba(0,0,0,.2);border-radius:14px}
+.gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.gallery-arrow:hover{background:rgba(0,0,0,.8)}
+.gallery-arrow.left{left:10px}
+.gallery-arrow.right{right:10px}
+.gallery-arrow[disabled]{display:none}
+.modal-gallery .thumbs{display:flex;gap:8px;margin-top:10px;overflow-x:auto}
+.modal-gallery .thumbs img{width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;opacity:.7}
+.modal-gallery .thumbs img:hover{opacity:1}
+.modal-gallery .thumbs img.active{opacity:1;outline:2px solid #fff}
+.toast-container{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center}
+.toast{background:#2e1065;color:#fff;padding:10px 18px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.4);font-size:.9rem}
+.pin-box{max-width:340px;text-align:center}
+.pin-box input{text-align:center;letter-spacing:.5em;font-size:1.3rem}
+.admin-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border-radius:12px;padding:10px;margin-bottom:8px}
+.admin-item img{width:44px;height:44px;object-fit:cover;border-radius:8px}
+.admin-item .info{flex:1;min-width:0;font-size:.85rem}
+.admin-item .info .t{font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabbar{display:flex;gap:8px;margin-bottom:18px}
+.tabbar button{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;background:rgba(255,255,255,.1);color:#fff;font-weight:bold}
+.tabbar button.active{background:#fff;color:#5b21b6}
+.small{font-size:.78rem;opacity:.75;line-height:1.5}
+@media (max-width:680px){
+  #modal-ad-grid{grid-template-columns:1fr !important}
+  header h1{font-size:1.5rem}
+  .header-logo{width:34px;height:34px}
+  .header-inner{gap:12px}
+  .hero h2{font-size:1.7rem}
+  nav{gap:4px}
+  nav a{padding:7px 10px;font-size:.85rem}
+}
+
+html{scroll-behavior:smooth}
+body:before{
+content:"";
+position:fixed;inset:0;
+background:
+radial-gradient(circle at 15% 15%,rgba(255,255,255,.08),transparent 30%),
+radial-gradient(circle at 85% 20%,rgba(255,255,255,.06),transparent 28%),
+radial-gradient(circle at 50% 80%,rgba(255,255,255,.05),transparent 35%);
+pointer-events:none}
+.hero{backdrop-filter:blur(18px)!important;border:1px solid rgba(255,255,255,.18)!important;overflow:hidden;position:relative}
+.hero:before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 55%);animation:mmGlow 9s ease-in-out infinite;pointer-events:none;z-index:0}
+.hero>*{position:relative;z-index:1}
+@keyframes mmGlow{50%{transform:translateY(20px) scale(1.08)}}
+.action,.cat,.card,.btn,.iconbtn{transition:all .28s ease!important}
+.card{box-shadow:0 18px 34px rgba(0,0,0,.22)!important;border-radius:22px!important}
+.card img{transition:transform .5s ease}
+.card:hover img{transform:scale(1.08)}
+.card:hover{transform:translateY(-10px)!important;box-shadow:0 28px 52px rgba(0,0,0,.42)!important}
+.cat{background:linear-gradient(180deg,#7c3aed,#6d28d9)!important;border:none!important;box-shadow:0 12px 24px rgba(0,0,0,.22)}
+.cat:hover{transform:translateY(-6px) scale(1.03)}
+.filters,.form-box,.thread,.modal-box{backdrop-filter:blur(14px)}
+footer .cols{justify-content:space-between!important;gap:24px!important;flex-wrap:nowrap!important;max-width:1200px!important}
+.statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin:28px 0}
+.stat{background:rgba(255,255,255,.09);padding:18px;border-radius:18px;text-align:center;border:1px solid rgba(255,255,255,.14)}
+.stat b{display:block;font-size:1.6rem}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <svg class="header-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Morevia.fr">
+      <defs>
+        <linearGradient id="markGradL" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7c3aed"/>
+          <stop offset="1" stop-color="#5b21b6"/>
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="192" height="192" rx="44" fill="#ffffff"/>
+      <path d="M54,136 V69 L100,111 L146,69 V136" fill="none" stroke="url(#markGradL)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="100" cy="42" r="11" fill="url(#markGradL)"/>
+    </svg>
+    <div class="header-text">
+      <h1>Morevia.fr</h1>
+      <p>Achetez, vendez et échangez en toute simplicité</p>
+    </div>
+    <svg class="header-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Morevia.fr">
+      <defs>
+        <linearGradient id="markGradR" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7c3aed"/>
+          <stop offset="1" stop-color="#5b21b6"/>
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="192" height="192" rx="44" fill="#ffffff"/>
+      <path d="M54,136 V69 L100,111 L146,69 V136" fill="none" stroke="url(#markGradR)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="100" cy="42" r="11" fill="url(#markGradR)"/>
+    </svg>
+  </div>
+</header>
+
+<nav id="nav">
+  <a onclick="showPage('accueil')" data-page="accueil">Accueil</a>
+  <a onclick="showPage('annonces')" data-page="annonces">Explorer</a>
+  <a onclick="showPage('messages')" data-page="messages">Messages</a>
+  <a onclick="showPage('favoris')" data-page="favoris">Favoris</a>
+  <a onclick="showPage('panier')" data-page="panier">Panier<span id="cart-badge" class="badge" style="display:none">0</span></a>
+  <a onclick="showPage('apropos')" data-page="apropos">À propos</a>
+  <a onclick="openAccountArea()" id="nav-account">Connexion</a>
+</nav>
+
+<main>
+
+  <!-- ACCUEIL -->
+  <section class="page" id="page-accueil">
+    <div class="hero">
+      <h2>Achetez, vendez et échangez en toute simplicité</h2>
+      <p>Des milliers d'annonces, publiez vos produits en quelques clics et trouvez rapidement ce que vous cherchez.</p>
+      
+<div style="max-width:640px;margin:24px auto">
+<input id="hero-search" placeholder="Rechercher un produit, une marque, une ville..." onkeydown="if(event.key==='Enter')heroSearch()" style="width:100%;padding:16px 20px;border:none;border-radius:18px;font-size:1rem;box-shadow:0 12px 28px rgba(0,0,0,.28)">
+</div>
+<div class="statbar">
+<div class="stat"><b id="stat-listings">0</b>Annonces</div>
+<div class="stat"><b id="stat-sellers">0</b>Vendeurs</div>
+<div class="stat"><b id="stat-categories">0</b>Catégories</div>
+<div class="stat"><b id="stat-villes">0</b>Villes</div>
+</div>
+<div class="actions">
+        <button class="action" onclick="showPage('annonces')">Explorer les annonces</button>
+        <button class="action" onclick="showPage('deposer')">Déposer une annonce</button>
+        <button class="action" onclick="showPage('favoris')">Favoris</button>
+        <button class="action" onclick="showPage('annonces')">Toutes les catégories</button>
+      </div>
+    </div>
+    <div class="section">
+      <h3>Catégories populaires</h3>
+      <div class="categories" id="cat-grid"></div>
+    </div>
+  </section>
+
+  <!-- ANNONCES / EXPLORER -->
+  <section class="page" id="page-annonces">
+    <h3 style="margin-top:0">Annonces</h3>
+    <div class="filters">
+      <input id="f-search" placeholder="Que recherchez-vous ?" oninput="renderAnnonces()">
+      <select id="f-cat" onchange="renderAnnonces()"><option value="">Toutes catégories</option></select>
+      <input id="f-ville" placeholder="Ville" oninput="renderAnnonces()">
+      <input id="f-prix" type="number" min="0" placeholder="Prix maximum" oninput="renderAnnonces()">
+      <button class="btn" onclick="renderAnnonces()">Rechercher</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin-bottom:16px;font-size:.9rem">
+      <input type="checkbox" id="f-hide-sold" style="width:auto" checked onchange="renderAnnonces()"> Masquer les annonces vendues
+    </label>
+    <div id="ads" class="grid"></div>
+  </section>
+
+  <!-- DEPOSER UNE ANNONCE -->
+  <section class="page" id="page-deposer">
+    <h3 style="margin-top:0">Déposer une annonce</h3>
+    <div class="form-box">
+      <form id="ad-form" onsubmit="publishAd(event)">
+        <label>Titre de l'annonce *</label>
+        <input id="titre" list="titre-suggestions" placeholder="Ex : iPhone 13 Pro 128 Go" required>
+        <datalist id="titre-suggestions"></datalist>
+        <label>Prix (€) *</label>
+        <input id="prix" type="number" min="0" step="1" placeholder="350" required>
+        <p class="small" style="margin-top:4px">Votre première vente sur Morevia.fr est offerte (0% de commission). À partir de la deuxième vente, une commission de 10% s'applique.</p>
+        <label>Catégorie</label>
+        <select id="categorie">
+          <option>Téléphonie</option><option>Informatique</option><option>Image &amp; Son</option>
+          <option>Maison &amp; Jardin</option><option>Mode</option><option>Véhicules</option>
+          <option>Sports &amp; Loisirs</option><option>Enfants &amp; Bébé</option><option>Animaux</option>
+          <option>Emploi</option><option>Immobilier</option><option>Autres</option>
+        </select>
+        <label>Ville *</label>
+        <input id="ville" list="ville-suggestions" placeholder="Ex : Lyon" required>
+        <datalist id="ville-suggestions"></datalist>
+        <label>Description</label>
+        <textarea id="description" placeholder="État, caractéristiques, raison de la vente..."></textarea>
+        <label>Photos (jusqu'à 4)</label>
+        <div class="upload-zone" onclick="document.getElementById('photos').click()">Choisir des photos</div>
+        <input type="file" id="photos" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)">
+        <div id="preview"></div>
+        <hr style="border-color:rgba(255,255,255,.2);margin:22px 0">
+        <label>Vos coordonnées (visibles par les acheteurs intéressés)</label>
+        <input id="nom" placeholder="Nom et prénom *" required style="margin-bottom:8px">
+        <input id="email" type="email" placeholder="Adresse e-mail *" required style="margin-bottom:8px">
+        <input id="telephone" type="tel" placeholder="Téléphone (optionnel)">
+        <div id="stripe-connect-box" style="margin-top:16px;background:rgba(255,255,255,.06);border-radius:12px;padding:14px">
+          <label style="margin:0 0 6px">Recevoir mes paiements par carte bleue</label>
+          <p class="small" id="stripe-connect-status">Renseignez votre e-mail ci-dessus puis cliquez sur le bouton pour connecter votre compte de paiement (géré par Stripe, sécurisé).</p>
+          <button type="button" class="btn outline" style="margin-top:8px" onclick="connectSellerStripe()">Connecter mon compte pour être payé</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:16px;font-weight:normal">
+          <input type="checkbox" id="cgv-ok" required style="width:auto"> J'accepte les <button type="button" class="linklike" style="color:#fff;text-decoration:underline;display:inline;padding:0" onclick="openLegal('cgv')">conditions générales de vente</button>
+        </label>
+        <button class="btn" id="publish-submit-btn" style="margin-top:20px;width:100%">Publier l'annonce</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section class="page" id="page-messages">
+    <h3 style="margin-top:0">Messages</h3>
+    <p class="small" style="margin-bottom:18px">Les fils de discussion des annonces que vous avez contactées apparaissent ici. (Historique conservé sur cet appareil et cette session uniquement.)</p>
+    <div id="messages-list"></div>
+  </section>
+
+  <!-- FAVORIS -->
+  <section class="page" id="page-favoris">
+    <h3 style="margin-top:0">Mes favoris</h3>
+    <p class="small" style="margin-bottom:18px">Vos favoris sont conservés le temps de votre visite.</p>
+    <div id="fav-grid" class="grid"></div>
+  </section>
+
+  <!-- PANIER -->
+  <section class="page" id="page-panier">
+    <h3 style="margin-top:0">Panier</h3>
+    <div id="cart-content"></div>
+    <div id="cart-total" style="margin-top:20px;font-size:1.3rem;font-weight:900;display:none"></div>
+    <button class="btn" id="pay-btn" style="margin-top:16px;display:none" onclick="simulatePayment()">Payer maintenant</button>
+  </section>
+
+  <!-- A PROPOS -->
+  <section class="page" id="page-apropos">
+    <h3 style="margin-top:0">À propos de Morevia.fr</h3>
+    <p>Morevia.fr est une marketplace généraliste qui permet à toute personne d'acheter et de vendre facilement des objets d'occasion ou neufs, partout en France.</p>
+    <p style="margin-top:16px">Que vous cherchiez à vider vos placards, trouver une bonne affaire ou vendre un objet dont vous n'avez plus besoin, Morevia.fr vous met en relation directe avec des acheteurs et vendeurs de votre région, dans un cadre pensé pour la confiance : messagerie intégrée, fiches d'annonces détaillées, et un paiement simplifié.</p>
+    <p style="margin-top:16px">La plateforme se rémunère par une commission de 10% prélevée sur chaque vente réalisée — l'acheteur ne paie jamais plus que le prix affiché sur l'annonce.</p>
+    <p style="margin-top:16px" class="small">Pour en savoir plus sur l'équipe derrière le projet, consultez la page <button type="button" class="linklike" style="color:#fff;text-decoration:underline;display:inline;padding:0" onclick="openLegal('qui')">Qui sommes-nous ?</button> en bas de page.</p>
+  </section>
+
+</main>
+
+<!-- MODAL DETAIL ANNONCE -->
+<div class="modal-overlay" id="modal-ad">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal('modal-ad')">×</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px" id="modal-ad-grid">
+      <div class="modal-gallery">
+        <div style="position:relative">
+          <img class="main" id="ad-img">
+          <button class="gallery-arrow left" onclick="adGalleryStep(-1)" id="ad-gallery-prev" aria-label="Photo précédente">‹</button>
+          <button class="gallery-arrow right" onclick="adGalleryStep(1)" id="ad-gallery-next" aria-label="Photo suivante">›</button>
+        </div>
+        <div class="thumbs" id="ad-thumbs"></div>
+      </div>
+      <div>
+        <p class="small" id="ad-cat" style="text-transform:uppercase;font-weight:bold"></p>
+        <h2 id="ad-titre" style="margin:4px 0"></h2>
+        <p style="font-size:2rem;font-weight:900;margin:6px 0" id="ad-prix"></p>
+        <p class="small"><span id="ad-ville"></span> · <span id="ad-nom"></span></p>
+        <p class="small" id="ad-tel-row"><span id="ad-tel"></span></p>
+        <p style="margin-top:16px;line-height:1.6" id="ad-desc"></p>
+        <p id="ad-sold-banner" style="display:none;margin-top:16px;background:#1e0a45;color:#fff;font-weight:900;padding:10px 14px;border-radius:10px;text-align:center">Cette annonce a été vendue</p>
+        <div class="row" style="margin-top:20px" id="ad-actions">
+          <button class="btn" id="ad-addcart-btn" onclick="addCartCurrent()">Ajouter au panier</button>
+          <button class="btn outline" id="ad-contact-btn" onclick="openMessages(currentAdId);closeModal('modal-ad')">Contacter le vendeur</button>
+          <button class="iconbtn fav" id="ad-fav-btn" onclick="toggleFavCurrent()">Favori</button>
+        </div>
+        <button type="button" class="linklike" style="margin-top:14px;font-size:.82rem;opacity:.8" onclick="openEditPhotos()">C'est votre annonce ? Modifier l'annonce</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL COMPTE (connexion / inscription) -->
+<div class="modal-overlay" id="modal-auth">
+  <div class="modal-box" style="max-width:420px">
+    <button class="modal-close" onclick="closeModal('modal-auth')">×</button>
+    <div class="tabbar">
+      <button id="auth-tab-btn-login" class="active" onclick="setAuthTab('login')">Connexion</button>
+      <button id="auth-tab-btn-register" onclick="setAuthTab('register')">Créer un compte</button>
+    </div>
+    <div id="auth-tab-login">
+      <label>Adresse e-mail</label>
+      <input id="login-email" type="email" placeholder="vous@exemple.fr">
+      <label>Mot de passe</label>
+      <input id="login-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn" style="margin-top:16px;width:100%" onclick="doLogin()">Se connecter</button>
+    </div>
+    <div id="auth-tab-register" style="display:none">
+      <label>Nom</label>
+      <input id="register-nom" placeholder="Votre nom">
+      <label>Adresse e-mail</label>
+      <input id="register-email" type="email" placeholder="vous@exemple.fr">
+      <label>Mot de passe (8 caractères minimum)</label>
+      <input id="register-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doRegister()">
+      <button class="btn" style="margin-top:16px;width:100%" onclick="doRegister()">Créer mon compte</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MON COMPTE (connecté) -->
+<div class="modal-overlay" id="modal-my-account">
+  <div class="modal-box" style="max-width:420px">
+    <button class="modal-close" onclick="closeModal('modal-my-account')">×</button>
+    <h2 style="margin-top:0">Mon compte</h2>
+    <p class="small"><span id="account-nom"></span> · <span id="account-email"></span></p>
+    <h4 style="margin-bottom:6px">Changer mon mot de passe</h4>
+    <label>Mot de passe actuel</label>
+    <input id="change-current-password" type="password" placeholder="••••••••">
+    <label>Nouveau mot de passe (8 caractères minimum)</label>
+    <input id="change-new-password" type="password" placeholder="••••••••">
+    <button class="btn" style="margin-top:12px;width:100%" onclick="doChangePassword()">Mettre à jour le mot de passe</button>
+    <button class="btn outline" style="margin-top:20px;width:100%" onclick="doLogout()">Se déconnecter</button>
+  </div>
+</div>
+
+<!-- MODAL EDIT PHOTOS -->
+<div class="modal-overlay" id="modal-edit-photos">
+  <div class="modal-box" style="max-width:520px;max-height:85vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeModal('modal-edit-photos')">×</button>
+    <h2 style="margin-top:0">Modifier mon annonce</h2>
+    <label>Titre</label>
+    <input id="edit-titre" list="titre-suggestions">
+    <label>Prix (€)</label>
+    <input id="edit-prix" type="number" min="0" step="0.01">
+    <label>Catégorie</label>
+    <select id="edit-categorie"></select>
+    <label>Ville</label>
+    <input id="edit-ville" list="ville-suggestions">
+    <label>Téléphone (optionnel)</label>
+    <input id="edit-telephone" type="tel">
+    <label>Description</label>
+    <textarea id="edit-desc" rows="4"></textarea>
+    <p class="small" style="margin-top:16px">Photos (4 maximum)</p>
+    <div id="edit-photos-grid" style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0"></div>
+    <div class="upload-zone" id="edit-upload-zone" onclick="document.getElementById('edit-photos-input').click()">Ajouter des photos</div>
+    <input type="file" id="edit-photos-input" accept="image/*" multiple style="display:none" onchange="handleEditPhotoUpload(event)">
+    <button class="btn" id="edit-photos-save-btn" style="margin-top:18px;width:100%" onclick="saveEditedPhotos()">Enregistrer les modifications</button>
+  </div>
+</div>
+
+<!-- MODAL LEGAL -->
+<div class="modal-overlay" id="modal-legal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-legal')">×</button>
+    <h2 id="legal-title"></h2>
+    <div class="small" id="legal-body" style="line-height:1.7"></div>
+  </div>
+</div>
+
+<!-- MODAL ADMIN -->
+<div class="modal-overlay" id="modal-admin">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal('modal-admin')">×</button>
+    <div id="admin-pin-gate" class="pin-box" style="margin:20px auto">
+      <h2>Accès administrateur</h2>
+      <p class="small">Entrez le code d'accès.</p>
+      <input id="admin-pin-input" type="password" maxlength="4" placeholder="••••" style="width:140px;padding:10px;border-radius:10px;border:none;margin:14px 0">
+      <button class="btn" style="display:block;margin:auto" onclick="checkAdminPin()">Déverrouiller</button>
+    </div>
+    <div id="admin-content" style="display:none">
+      <h2>Administration</h2>
+      <div class="tabbar">
+        <button id="tab-btn-ads" class="active" onclick="setAdminTab('ads')">Annonces (<span id="admin-count">0</span>)</button>
+        <button id="tab-btn-msgs" onclick="setAdminTab('msgs')">Messages</button>
+        <button id="tab-btn-revenue" onclick="setAdminTab('revenue')">Revenus</button>
+      </div>
+      <div id="admin-tab-ads"></div>
+      <div id="admin-tab-revenue" style="display:none">
+        <div class="statbar" style="margin-bottom:20px">
+          <div class="stat"><b id="rev-total">0 €</b>Chiffre d'affaires</div>
+          <div class="stat"><b id="rev-commission">0 €</b>Commission (10%)</div>
+          <div class="stat"><b id="rev-sellers">0 €</b>Reversé vendeurs</div>
+          <div class="stat"><b id="rev-count">0</b>Ventes</div>
+        </div>
+        <div id="rev-list"></div>
+      </div>
+      <div id="admin-tab-msgs" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<footer>
+  <div class="cols">
+    <div><h3>Morevia.fr</h3>
+      <button class="linklike" onclick="openLegal('apropos2')">À propos de nous</button>
+      <button class="linklike" onclick="openLegal('qui')">Qui sommes-nous ?</button>
+    </div>
+    <div><h3>Informations</h3>
+      <button class="linklike" onclick="openLegal('mentions')">Mentions légales</button>
+      <button class="linklike" onclick="openLegal('cgu')">CGU</button>
+      <button class="linklike" onclick="openLegal('cgv')">CGV</button>
+      <button class="linklike" onclick="openLegal('confidentialite')">Politique de confidentialité</button>
+      <button class="linklike" onclick="openLegal('cookies')">Politique des cookies</button>
+    </div>
+    <div><h3>Assistance</h3>
+      <button class="linklike" onclick="openLegal('contact')">Contact</button>
+      <button class="linklike" onclick="openLegal('faq')">FAQ</button>
+    </div>
+    <div><h3>Communauté</h3>
+      <button class="linklike" onclick="openLegal('securite')">Conseils de sécurité</button>
+      <button class="linklike" onclick="openLegal('confiance')">Acheter en confiance</button>
+      <button class="linklike" onclick="openLegal('vendre')">Vendre efficacement</button>
+    </div>
+  </div>
+  <hr>
+  <div class="copyright">© 2026 Morevia.fr — Tous droits réservés.</div>
+</footer>
+
+<script>
+// --- Compatibilité stockage local (ajouté pour tester/héberger en dehors de la plateforme d'origine) ---
+// Le site utilise window.storage pour sauvegarder les annonces, favoris, messages, etc.
+// Cette API n'existe pas dans un navigateur normal : on la recrée ici avec localStorage,
+// pour que le site fonctionne tel quel en local ou une fois hébergé chez OVH.
+if (!window.storage) {
+  window.storage = {
+    get: async (key) => {
+      const v = localStorage.getItem(key);
+      return { value: v !== null ? v : null };
+    },
+    set: async (key, value) => {
+      localStorage.setItem(key, value);
+      return true;
+    },
+    delete: async (key) => {
+      localStorage.removeItem(key);
+      return true;
+    }
+  };
+}
+const ADMIN_PIN = "6464";
+const LISTINGS_KEY = "morevia-v1-listings";
+const MESSAGES_KEY = "morevia-v1-messages";
+const CART_KEY = "morevia-v1-cart";
+const FAVORITES_KEY = "morevia-v1-favorites";
+const TRANSACTIONS_KEY = "morevia-v1-transactions";
+const FIRST_SALE_KEY = "morevia-v1-first-sale-used";
+const COMMISSION_RATE = 0.10;
+const SELLER_ACCOUNTS_KEY = "morevia-v1-seller-stripe-accounts";
+// URL de votre backend de paiement une fois déployé (voir dossier backend/README.md).
+// Pour retester en local : "http://localhost:4242" (nécessite les 3 terminaux lancés). Laissez vide ("") pour le mode paiement simulé.
+const PAYMENT_API_BASE = "";
+const CATEGORIES = ["Téléphonie","Informatique","Image & Son","Maison & Jardin","Mode","Véhicules","Sports & Loisirs","Enfants & Bébé","Animaux","Emploi","Immobilier","Autres"];
+const CATEGORIES_SHORT = {"Téléphonie":"TE","Informatique":"IN","Image & Son":"IS","Maison & Jardin":"MJ","Mode":"MO","Véhicules":"VE","Sports & Loisirs":"SL","Enfants & Bébé":"EB","Animaux":"AN","Emploi":"EM","Immobilier":"IM","Autres":"AU"};
+
+const TITRE_SUGGESTIONS = [
+  "iPhone 13 Pro","iPhone 14","iPhone 15","iPhone SE","Samsung Galaxy S23","Samsung Galaxy A54","Xiaomi Redmi Note",
+  "MacBook Air M1","MacBook Air M2","MacBook Pro","PC portable Gamer","PC de bureau","Écran PC 24 pouces","Clavier mécanique","Souris sans fil","Imprimante",
+  "iPad Air","iPad Pro","Tablette Samsung","Console PS5","Console Nintendo Switch","Manette PS5","Jeux vidéo",
+  "Télévision 55 pouces","Barre de son","Enceinte Bluetooth","Casque audio sans fil","Appareil photo reflex","Vidéoprojecteur",
+  "Canapé 3 places","Canapé d'angle","Table basse","Table à manger","Chaises de salle à manger","Lit double","Matelas","Armoire","Commode","Bureau",
+  "Réfrigérateur","Lave-linge","Lave-vaisselle","Four micro-ondes","Aspirateur","Machine à café","Robot cuiseur",
+  "Robe d'été","Manteau d'hiver","Baskets Nike","Sneakers Adidas","Sac à main","Montre","Lunettes de soleil","Jean",
+  "Vélo VTT","Vélo électrique","Trottinette électrique","Skateboard","Tapis de course","Vélo d'appartement","Ballon de football","Raquette de tennis","Tente de camping","Sac de couchage",
+  "Poussette","Lit bébé","Siège auto","Vêtements bébé","Jouets enfants","Trottinette enfant",
+  "Croquettes chien","Cage à oiseaux","Aquarium","Panier pour chat",
+  "Voiture citadine","Scooter 125","Vélo de route","Remorque",
+  "Appartement T2","Appartement T3","Maison avec jardin","Studio meublé",
+  "Livres","Bibliothèque","Tableau décoratif","Miroir","Lampe de bureau","Plante d'intérieur"
+];
+
+const VILLE_SUGGESTIONS = [
+  "Paris","Marseille","Lyon","Toulouse","Nice","Nantes","Montpellier","Strasbourg","Bordeaux","Lille",
+  "Rennes","Reims","Le Havre","Saint-Étienne","Toulon","Grenoble","Dijon","Angers","Nîmes","Villeurbanne",
+  "Le Mans","Aix-en-Provence","Clermont-Ferrand","Brest","Tours","Limoges","Amiens","Perpignan","Metz","Besançon",
+  "Boulogne-Billancourt","Orléans","Mulhouse","Rouen","Caen","Nancy","Saint-Denis","Argenteuil","Montreuil","Roubaix",
+  "Tourcoing","Avignon","Créteil","Poitiers","Versailles","Courbevoie","Colombes","Vitry-sur-Seine","Pau","Aulnay-sous-Bois",
+  "La Rochelle","Antibes","Cannes","Béziers","Bourges","Ajaccio","Annecy","Chambéry","Valence","Quimper",
+  "Troyes","Niort","Lorient","Angoulême","Arles","Blois","Vannes","Saint-Nazaire","Chartres","Bayonne"
+];
+
+function initFormSuggestions(){
+  document.getElementById('titre-suggestions').innerHTML = TITRE_SUGGESTIONS.map(t=>`<option value="${t}">`).join('');
+  document.getElementById('ville-suggestions').innerHTML = VILLE_SUGGESTIONS.map(v=>`<option value="${v}">`).join('');
+}
+
+const DEFAULT_LISTINGS = [
+  {id:1, titre:"iPhone 13 Pro 128 Go", prix:650, categorie:"Téléphonie", ville:"Paris", nom:"Julien M.", email:"contact@exemple.fr", telephone:"06 12 34 56 78", desc:"iPhone 13 Pro en très bon état, batterie 89%, avec chargeur et coque.", ts:Date.now()-90000000},
+  {id:2, titre:"MacBook Air M1", prix:750, categorie:"Informatique", ville:"Lyon", nom:"Sarah D.", email:"contact@exemple.fr", telephone:"", desc:"MacBook Air M1 8Go/256Go, quasi neuf, facture disponible.", ts:Date.now()-50000000},
+  {id:3, titre:"Vélo VTT adulte", prix:180, categorie:"Sports & Loisirs", ville:"Marseille", nom:"Karim B.", email:"contact@exemple.fr", telephone:"06 98 76 54 32", desc:"VTT taille M, freins à disque, très peu servi.", ts:Date.now()-20000000},
+  {id:4, titre:"Canapé 3 places gris", prix:220, categorie:"Maison & Jardin", ville:"Toulouse", nom:"Amélie R.", email:"contact@exemple.fr", telephone:"", desc:"Canapé confortable, bon état général, à venir chercher sur place.", ts:Date.now()-5000000}
+];
+
+let listings = [];
+let messages = {};
+let cart = [];
+let favorites = [];
+let uploadedImages = [];
+let currentAdId = null;
+let adminUnlocked = false;
+let adminTab = 'ads';
+
+/* ---------- CHARGEMENT / STOCKAGE ---------- */
+async function loadListings(){
+  try{ const res = await window.storage.get(LISTINGS_KEY, true); listings = res && res.value ? JSON.parse(res.value) : DEFAULT_LISTINGS; }
+  catch(e){ listings = DEFAULT_LISTINGS; try{ await window.storage.set(LISTINGS_KEY, JSON.stringify(listings), true); }catch(e2){} }
+}
+async function saveListings(){ try{ await window.storage.set(LISTINGS_KEY, JSON.stringify(listings), true); }catch(e){ showToast("Erreur d'enregistrement"); } }
+async function loadMessages(){
+  try{ const res = await window.storage.get(MESSAGES_KEY, true); messages = res && res.value ? JSON.parse(res.value) : {}; }
+  catch(e){ messages = {}; }
+}
+async function saveMessages(){ try{ await window.storage.set(MESSAGES_KEY, JSON.stringify(messages), true); }catch(e){} }
+async function loadCart(){
+  try{ const res = await window.storage.get(CART_KEY, false); cart = res && res.value ? JSON.parse(res.value) : []; }
+  catch(e){ cart = []; }
+}
+async function saveCart(){ try{ await window.storage.set(CART_KEY, JSON.stringify(cart), false); }catch(e){} }
+async function loadFavorites(){
+  try{ const res = await window.storage.get(FAVORITES_KEY, false); favorites = res && res.value ? JSON.parse(res.value) : []; }
+  catch(e){ favorites = []; }
+}
+let transactions = [];
+async function loadTransactions(){
+  try{ const res = await window.storage.get(TRANSACTIONS_KEY, true); transactions = res && res.value ? JSON.parse(res.value) : []; }
+  catch(e){ transactions = []; }
+}
+async function saveTransactions(){ try{ await window.storage.set(TRANSACTIONS_KEY, JSON.stringify(transactions), true); }catch(e){} }
+let firstSaleUsed = [];
+async function loadFirstSaleUsed(){
+  try{ const res = await window.storage.get(FIRST_SALE_KEY, true); firstSaleUsed = res && res.value ? JSON.parse(res.value) : []; }
+  catch(e){ firstSaleUsed = []; }
+}
+async function saveFirstSaleUsed(){ try{ await window.storage.set(FIRST_SALE_KEY, JSON.stringify(firstSaleUsed), true); }catch(e){} }
+let sellerAccounts = {};
+async function loadSellerAccounts(){
+  try{ const res = await window.storage.get(SELLER_ACCOUNTS_KEY, true); sellerAccounts = res && res.value ? JSON.parse(res.value) : {}; }
+  catch(e){ sellerAccounts = {}; }
+}
+async function saveSellerAccounts(){ try{ await window.storage.set(SELLER_ACCOUNTS_KEY, JSON.stringify(sellerAccounts), true); }catch(e){} }
+
+/* ---------- PAIEMENT RÉEL (Stripe Connect) ---------- */
+async function connectSellerStripe(){
+  if(!PAYMENT_API_BASE){ showToast("Le paiement réel n'est pas encore configuré (voir backend/README.md)"); return; }
+  const email = document.getElementById('email').value.trim();
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast("Renseignez d'abord une adresse e-mail valide"); return; }
+  try{
+    const res = await fetch(PAYMENT_API_BASE+'/api/create-seller-account', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email})
+    });
+    const data = await res.json();
+    if(data.onboardingUrl) window.location.href = data.onboardingUrl;
+    else showToast("Erreur lors de la connexion à Stripe");
+  }catch(e){ showToast("Impossible de contacter le serveur de paiement"); }
+}
+async function handleStripeReturn(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('stripe_return')==='1' && params.get('account_id') && params.get('email')){
+    sellerAccounts[params.get('email').toLowerCase().trim()] = params.get('account_id');
+    await saveSellerAccounts();
+    showToast("Compte de paiement connecté avec succès");
+    history.replaceState({}, '', window.location.pathname);
+  }
+  if(params.get('payment')==='success'){
+    showToast("Paiement effectué avec succès ! Le(s) vendeur(s) va(vont) être notifié(s).");
+    history.replaceState({}, '', window.location.pathname);
+  }
+  if(params.get('payment')==='cancel'){
+    showToast("Paiement annulé");
+    history.replaceState({}, '', window.location.pathname);
+  }
+}
+async function realCheckout(items){
+  const withAccounts = items.map(l=>({
+    id:l.id, titre:l.titre, prix:effectivePrice(l),
+    sellerEmail:(l.email||'').toLowerCase().trim(),
+    sellerStripeAccountId: sellerAccounts[(l.email||'').toLowerCase().trim()] || ''
+  }));
+  const notReady = withAccounts.filter(i=>!i.sellerStripeAccountId);
+  if(notReady.length){
+    showToast("Certains vendeurs n'ont pas encore connecté leur compte de paiement : "+notReady.map(i=>i.titre).join(', '));
+    return;
+  }
+  try{
+    const res = await fetch(PAYMENT_API_BASE+'/api/create-checkout-session', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items: withAccounts})
+    });
+    const data = await res.json();
+    if(data.url) window.location.href = data.url;
+    else showToast("Erreur lors de la création du paiement");
+  }catch(e){ showToast("Impossible de contacter le serveur de paiement"); }
+}
+async function saveFavorites(){ try{ await window.storage.set(FAVORITES_KEY, JSON.stringify(favorites), false); }catch(e){} }
+function cleanupCart(){ const before=cart.length; cart = cart.filter(id => listings.some(l=>l.id===id)); if(cart.length!==before) saveCart(); }
+function cleanupFavorites(){ const before=favorites.length; favorites = favorites.filter(id => listings.some(l=>l.id===id)); if(favorites.length!==before) saveFavorites(); }
+
+/* ---------- NAVIGATION ---------- */
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById('page-'+page).style.display='block';
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active', a.dataset.page===page));
+  if(page==='annonces') renderAnnonces();
+  if(page==='messages') renderMessagesPage();
+  if(page==='favoris') renderFavPage();
+  if(page==='panier') renderCartPage();
+  if(page==='deposer' && currentUser){
+    const emailEl = document.getElementById('email'); const nomEl = document.getElementById('nom');
+    if(emailEl && !emailEl.value) emailEl.value = currentUser.email;
+    if(nomEl && !nomEl.value && currentUser.nom) nomEl.value = currentUser.nom;
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- CATEGORIES ---------- */
+function initCategories(){
+  document.getElementById('cat-grid').innerHTML = CATEGORIES.map(c=>
+    `<div class="cat" onclick="filterByCategory('${c.replace(/'/g,"\\'")}')"><div class="cat-badge">${CATEGORIES_SHORT[c]}</div><strong>${c}</strong></div>`).join('');
+  const sel = document.getElementById('f-cat');
+  sel.innerHTML = '<option value="">Toutes catégories</option>' + CATEGORIES.map(c=>`<option>${c}</option>`).join('');
+}
+function filterByCategory(c){
+  document.getElementById('f-search').value = '';
+  document.getElementById('f-ville').value = '';
+  document.getElementById('f-prix').value = '';
+  document.getElementById('f-cat').value = c;
+  showPage('annonces');
+}
+function heroSearch(){
+  const q = document.getElementById('hero-search').value;
+  document.getElementById('f-search').value = q;
+  showPage('annonces');
+}
+function updateStats(){
+  const sellers = new Set(listings.map(l=>l.email).filter(Boolean));
+  const villes = new Set(listings.map(l=>l.ville).filter(Boolean));
+  document.getElementById('stat-listings').textContent = listings.length.toLocaleString('fr-FR');
+  document.getElementById('stat-sellers').textContent = sellers.size.toLocaleString('fr-FR');
+  document.getElementById('stat-categories').textContent = CATEGORIES.length;
+  document.getElementById('stat-villes').textContent = villes.size.toLocaleString('fr-FR');
+}
+
+/* ---------- ANNONCES ---------- */
+function placeholderImg(seed){
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#5b21b6"/></linearGradient></defs><rect width="600" height="450" fill="url(#g)"/><g fill="#ffffff" fill-opacity=".9"><rect x="215" y="165" width="170" height="120" rx="12"/><circle cx="300" cy="225" r="30" fill="#7c3aed"/></g></svg>`
+  );
+}
+function thumb(l){ return (l.images && l.images.length) ? l.images[0] : placeholderImg(l.id); }
+function applyFilters(){
+  const term = (document.getElementById('f-search').value||'').toLowerCase();
+  const cat = document.getElementById('f-cat').value;
+  const ville = (document.getElementById('f-ville').value||'').toLowerCase();
+  const maxPrice = parseFloat(document.getElementById('f-prix').value);
+  const hideSoldEl = document.getElementById('f-hide-sold');
+  const hideSold = hideSoldEl ? hideSoldEl.checked : true;
+  return listings.filter(l=>
+    l.titre.toLowerCase().includes(term) &&
+    (!cat || l.categorie===cat) &&
+    (!ville || (l.ville||'').toLowerCase().includes(ville)) &&
+    (isNaN(maxPrice) || effectivePrice(l)<=maxPrice) &&
+    (!hideSold || !l.vendu)
+  ).sort((a,b)=>b.ts-a.ts);
+}
+function renderAnnonces(){
+  const list = applyFilters();
+  const el = document.getElementById('ads');
+  if(!list.length){ el.innerHTML = '<p class="empty">Aucune annonce ne correspond à ta recherche.</p>'; return; }
+  el.innerHTML = list.map(cardHtml).join('');
+}
+function fmtPrice(p){ return Number(p).toLocaleString('fr-FR')+' €'; }
+function isOnSale(l){ return !!(l.soldePrix && l.soldeExpire && l.soldeExpire > Date.now()); }
+function effectivePrice(l){ return isOnSale(l) ? l.soldePrix : l.prix; }
+function cardHtml(l){
+  const isFav = favorites.includes(l.id);
+  const sold = !!l.vendu;
+  const onSale = !sold && isOnSale(l);
+  const priceHtml = onSale
+    ? `<span style="text-decoration:line-through;opacity:.6;font-size:.9rem;margin-right:6px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>`
+    : fmtPrice(l.prix);
+  return `<div class="card ${sold?'sold':''}" onclick="openAd(${l.id})">
+    <div style="position:relative">
+      <img src="${thumb(l)}" loading="lazy">
+      ${sold ? '<div class="sold-badge">Vendu</div>' : ''}
+      ${onSale ? '<div class="sold-badge" style="background:#f43f5e">Solde</div>' : ''}
+    </div>
+    <div class="body">
+      <div class="cat-tag"><span class="cat-badge-sm">${CATEGORIES_SHORT[l.categorie]||'?'}</span>${escapeHtml(l.categorie||'')}</div>
+      <h4>${escapeHtml(l.titre)}</h4>
+      <div class="price">${priceHtml}</div>
+      <div class="city">${escapeHtml(l.ville||'-')}</div>
+      <div class="row">
+        <button class="iconbtn fav ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav(${l.id})">Favori</button>
+        ${sold ? '' : `<button class="iconbtn" onclick="event.stopPropagation();addCart(${l.id})">Ajouter</button>
+        <button class="iconbtn" onclick="event.stopPropagation();openMessages(${l.id})">Message</button>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+let currentAdImages = [];
+let currentAdImgIndex = 0;
+function renderAdGallery(){
+  document.getElementById('ad-img').src = currentAdImages[currentAdImgIndex];
+  document.getElementById('ad-thumbs').innerHTML = currentAdImages.map((img,i)=>`<img src="${img}" class="${i===currentAdImgIndex?'active':''}" onclick="currentAdImgIndex=${i};renderAdGallery()">`).join('');
+  const multi = currentAdImages.length > 1;
+  document.getElementById('ad-gallery-prev').disabled = !multi;
+  document.getElementById('ad-gallery-next').disabled = !multi;
+}
+function adGalleryStep(dir){
+  if(currentAdImages.length < 2) return;
+  currentAdImgIndex = (currentAdImgIndex + dir + currentAdImages.length) % currentAdImages.length;
+  renderAdGallery();
+}
+function openAd(id){
+  const l = listings.find(x=>x.id===id); if(!l) return;
+  currentAdId = id;
+  currentAdImages = (l.images && l.images.length) ? l.images : [thumb(l)];
+  currentAdImgIndex = 0;
+  renderAdGallery();
+  document.getElementById('ad-cat').textContent = l.categorie;
+  document.getElementById('ad-titre').textContent = l.titre;
+  document.getElementById('ad-prix').innerHTML = isOnSale(l)
+    ? `<span style="text-decoration:line-through;opacity:.6;font-size:1.2rem;margin-right:8px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>`
+    : fmtPrice(l.prix);
+  document.getElementById('ad-ville').textContent = l.ville||'-';
+  document.getElementById('ad-nom').textContent = l.nom||'-';
+  const telRow = document.getElementById('ad-tel-row');
+  if(l.telephone){ telRow.style.display='block'; document.getElementById('ad-tel').textContent = l.telephone; } else { telRow.style.display='none'; }
+  document.getElementById('ad-desc').textContent = l.desc||'';
+  const sold = !!l.vendu;
+  document.getElementById('ad-sold-banner').style.display = sold ? 'block' : 'none';
+  document.getElementById('ad-addcart-btn').style.display = sold ? 'none' : 'inline-block';
+  document.getElementById('ad-contact-btn').style.display = sold ? 'none' : 'inline-block';
+  document.getElementById('ad-fav-btn').classList.toggle('active', favorites.includes(id));
+  openModal('modal-ad');
+}
+function addCartCurrent(){
+  if(!currentAdId) return;
+  addCart(currentAdId);
+  closeModal('modal-ad');
+  showPage('panier');
+}
+function toggleFavCurrent(){ if(currentAdId){ toggleFav(currentAdId); document.getElementById('ad-fav-btn').classList.toggle('active', favorites.includes(currentAdId)); } }
+
+/* ---------- PUBLICATION ---------- */
+let photosProcessing = Promise.resolve();
+
+/* ---------- COMPTES CLIENTS ---------- */
+let authToken = null;
+let currentUser = null;
+async function loadAuthToken(){
+  try{ const res = await window.storage.get('morevia-auth-token', false); authToken = res && res.value ? res.value : null; }
+  catch(e){ authToken = null; }
+}
+async function saveAuthToken(token){
+  authToken = token;
+  try{
+    if(token) await window.storage.set('morevia-auth-token', token, false);
+    else await window.storage.delete('morevia-auth-token', false);
+  }catch(e){}
+}
+async function refreshAuthSession(){
+  if(!PAYMENT_API_BASE || !authToken){ updateAccountNav(); return; }
+  try{
+    const res = await fetch(PAYMENT_API_BASE+'/api/auth/me', { headers:{ 'Authorization':'Bearer '+authToken } });
+    if(!res.ok){ await saveAuthToken(null); currentUser=null; updateAccountNav(); return; }
+    const data = await res.json();
+    currentUser = data.user;
+  }catch(e){ currentUser = null; }
+  updateAccountNav();
+}
+function updateAccountNav(){
+  const nav = document.getElementById('nav-account');
+  nav.textContent = currentUser ? (currentUser.nom || currentUser.email) : 'Connexion';
+}
+function openAccountArea(){
+  if(!PAYMENT_API_BASE){ showToast("Le système de comptes n'est pas encore configuré côté serveur (voir backend/README.md)"); return; }
+  if(currentUser){
+    document.getElementById('account-nom').textContent = currentUser.nom || '-';
+    document.getElementById('account-email').textContent = currentUser.email;
+    document.getElementById('change-current-password').value='';
+    document.getElementById('change-new-password').value='';
+    openModal('modal-my-account');
+  } else {
+    setAuthTab('login');
+    openModal('modal-auth');
+  }
+}
+function setAuthTab(tab){
+  document.getElementById('auth-tab-btn-login').classList.toggle('active', tab==='login');
+  document.getElementById('auth-tab-btn-register').classList.toggle('active', tab==='register');
+  document.getElementById('auth-tab-login').style.display = tab==='login' ? 'block':'none';
+  document.getElementById('auth-tab-register').style.display = tab==='register' ? 'block':'none';
+}
+async function doRegister(){
+  const nom = document.getElementById('register-nom').value.trim();
+  const email = document.getElementById('register-email').value.trim();
+  const password = document.getElementById('register-password').value;
+  if(!email || !password){ showToast("Merci de remplir l'e-mail et le mot de passe"); return; }
+  try{
+    const res = await fetch(PAYMENT_API_BASE+'/api/auth/register', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password, nom})
+    });
+    const data = await res.json();
+    if(!res.ok){ showToast(data.error || "Erreur lors de l'inscription"); return; }
+    await saveAuthToken(data.token); currentUser = data.user;
+    updateAccountNav(); closeModal('modal-auth');
+    showToast("Compte créé, bienvenue !");
+  }catch(e){ showToast("Impossible de contacter le serveur de comptes"); }
+}
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if(!email || !password){ showToast("Merci de remplir l'e-mail et le mot de passe"); return; }
+  try{
+    const res = await fetch(PAYMENT_API_BASE+'/api/auth/login', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password})
+    });
+    const data = await res.json();
+    if(!res.ok){ showToast(data.error || "Erreur de connexion"); return; }
+    await saveAuthToken(data.token); currentUser = data.user;
+    updateAccountNav(); closeModal('modal-auth');
+    showToast("Connexion réussie");
+  }catch(e){ showToast("Impossible de contacter le serveur de comptes"); }
+}
+async function doLogout(){
+  await saveAuthToken(null); currentUser = null;
+  updateAccountNav(); closeModal('modal-my-account');
+  showToast("Déconnecté");
+}
+async function doChangePassword(){
+  const currentPassword = document.getElementById('change-current-password').value;
+  const newPassword = document.getElementById('change-new-password').value;
+  if(!currentPassword || !newPassword){ showToast("Merci de remplir les deux champs"); return; }
+  try{
+    const res = await fetch(PAYMENT_API_BASE+'/api/auth/change-password', {
+      method:'POST', headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+authToken}, body: JSON.stringify({currentPassword, newPassword})
+    });
+    const data = await res.json();
+    if(!res.ok){ showToast(data.error || "Erreur lors du changement de mot de passe"); return; }
+    document.getElementById('change-current-password').value='';
+    document.getElementById('change-new-password').value='';
+    showToast("Mot de passe mis à jour");
+  }catch(e){ showToast("Impossible de contacter le serveur de comptes"); }
+}
+
+/* ---------- MODIFICATION DES PHOTOS PAR LE VENDEUR ---------- */
+let editPhotosListingId = null;
+let editPhotosDraft = [];
+let editPhotosProcessing = Promise.resolve();
+function openEditPhotos(){
+  const l = listings.find(x=>x.id===currentAdId); if(!l) return;
+  const isOwnerLoggedIn = currentUser && currentUser.email && currentUser.email.toLowerCase() === (l.email||'').toLowerCase().trim();
+  if(!isOwnerLoggedIn){
+    const email = prompt("Pour modifier les photos, confirmez l'adresse e-mail utilisée à la publication de cette annonce :");
+    if(email===null) return;
+    if(email.trim().toLowerCase() !== (l.email||'').toLowerCase().trim()){
+      showToast("Adresse e-mail incorrecte : vous n'êtes pas l'auteur de cette annonce.");
+      return;
+    }
+  }
+  editPhotosListingId = l.id;
+  editPhotosDraft = (l.images && l.images.length) ? l.images.slice() : [];
+  document.getElementById('edit-titre').value = l.titre||'';
+  document.getElementById('edit-prix').value = l.prix||'';
+  document.getElementById('edit-ville').value = l.ville||'';
+  document.getElementById('edit-telephone').value = l.telephone||'';
+  document.getElementById('edit-desc').value = l.desc||'';
+  const catSel = document.getElementById('edit-categorie');
+  if(!catSel.options.length) catSel.innerHTML = CATEGORIES.map(c=>`<option value="${c}">${c}</option>`).join('');
+  catSel.value = l.categorie||'';
+  closeModal('modal-ad');
+  renderEditPhotosGrid();
+  openModal('modal-edit-photos');
+}
+function renderEditPhotosGrid(){
+  const grid = document.getElementById('edit-photos-grid');
+  grid.innerHTML = editPhotosDraft.map((img,i)=>`<div class="edit-photo-thumb"><img src="${img}"><button class="rm" onclick="removeEditPhoto(${i})">×</button></div>`).join('');
+  document.getElementById('edit-upload-zone').style.display = editPhotosDraft.length >= 4 ? 'none' : 'block';
+}
+function removeEditPhoto(i){
+  editPhotosDraft.splice(i,1);
+  renderEditPhotosGrid();
+}
+function handleEditPhotoUpload(e){
+  const remaining = 4 - editPhotosDraft.length;
+  if(remaining <= 0){ showToast("Maximum 4 photos par annonce"); e.target.value=''; return; }
+  const files = [...e.target.files].slice(0, remaining);
+  if(e.target.files.length > remaining) showToast(`Seules ${remaining} photo(s) supplémentaire(s) seront ajoutées (maximum 4 au total)`);
+  const saveBtn = document.getElementById('edit-photos-save-btn');
+  saveBtn.disabled = true; saveBtn.textContent = 'Traitement des photos...';
+  editPhotosProcessing = Promise.all(files.map(file => new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas'); const maxW=700; const scale=Math.min(1,maxW/img.width);
+        canvas.width = img.width*scale; canvas.height = img.height*scale;
+        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',0.75));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }))).then(images=>{
+    editPhotosDraft = editPhotosDraft.concat(images);
+    renderEditPhotosGrid();
+    saveBtn.disabled = false; saveBtn.textContent = 'Enregistrer les modifications';
+    e.target.value='';
+  });
+}
+async function saveEditedPhotos(){
+  await editPhotosProcessing;
+  const l = listings.find(x=>x.id===editPhotosListingId); if(!l) return;
+  const titre = document.getElementById('edit-titre').value.trim();
+  const prix = parseFloat(document.getElementById('edit-prix').value);
+  const ville = document.getElementById('edit-ville').value.trim();
+  if(!titre || !ville){ showToast("Merci de remplir au moins le titre et la ville"); return; }
+  if(isNaN(prix) || prix<=0){ showToast("Merci d'indiquer un prix valide"); return; }
+  l.titre = titre;
+  l.prix = prix;
+  l.categorie = document.getElementById('edit-categorie').value;
+  l.ville = ville;
+  l.telephone = document.getElementById('edit-telephone').value.trim();
+  l.desc = document.getElementById('edit-desc').value.trim();
+  l.images = editPhotosDraft.slice();
+  await saveListings();
+  closeModal('modal-edit-photos');
+  renderAnnonces();
+  showToast("Annonce mise à jour");
+}
+function handlePhotos(e){
+  if(e.target.files.length > 4) showToast("Seules les 4 premières photos seront utilisées");
+  const files = [...e.target.files].slice(0,4);
+  const preview = document.getElementById('preview'); preview.innerHTML='';
+  const submitBtn = document.getElementById('publish-submit-btn');
+  if(!files.length){ uploadedImages = []; return; }
+  if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Traitement des photos...'; }
+  photosProcessing = Promise.all(files.map(file => new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas'); const maxW=700; const scale=Math.min(1,maxW/img.width);
+        canvas.width = img.width*scale; canvas.height = img.height*scale;
+        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',0.75));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }))).then(images=>{
+    uploadedImages = images;
+    images.forEach(dataUrl=>{ const p = document.createElement('img'); p.src = dataUrl; preview.appendChild(p); });
+    if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = "Publier l'annonce"; }
+  });
+}
+async function publishAd(e){
+  e.preventDefault();
+  await photosProcessing;
+  const titre = document.getElementById('titre').value.trim();
+  const prix = parseFloat(document.getElementById('prix').value);
+  const categorie = document.getElementById('categorie').value;
+  const ville = document.getElementById('ville').value.trim();
+  const desc = document.getElementById('description').value.trim();
+  const nom = document.getElementById('nom').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const telephone = document.getElementById('telephone').value.trim();
+  if(!titre||!prix||!ville||!nom||!email){ showToast("Merci de remplir tous les champs obligatoires (*)"); return; }
+  if(isNaN(prix) || prix<=0){ showToast("Merci d'indiquer un prix valide"); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast("Merci d'indiquer une adresse e-mail valide"); return; }
+  const newId = listings.length ? Math.max(...listings.map(x=>x.id))+1 : 1;
+  listings.push({id:newId, titre, prix, categorie, ville, nom, email, telephone, desc, images: uploadedImages.length?uploadedImages:[], ts:Date.now()});
+  await saveListings();
+  e.target.reset();
+  document.getElementById('preview').innerHTML=''; uploadedImages=[];
+  showToast("Annonce publiée.");
+  updateStats();
+  showPage('annonces');
+}
+
+/* ---------- FAVORIS ---------- */
+function toggleFav(id){
+  const i = favorites.indexOf(id);
+  if(i>-1) favorites.splice(i,1); else favorites.push(id);
+  saveFavorites();
+  renderAnnonces();
+  if(document.getElementById('page-favoris').style.display==='block') renderFavPage();
+}
+function renderFavPage(){
+  const list = listings.filter(l=>favorites.includes(l.id));
+  const el = document.getElementById('fav-grid');
+  el.innerHTML = list.length ? list.map(cardHtml).join('') : '<p class="empty">Vous n\u2019avez pas encore de favoris.</p>';
+}
+
+/* ---------- PANIER ---------- */
+function addCart(id){
+  const l = listings.find(x=>x.id===id); if(!l) return;
+  if(cart.includes(id)){ showToast("Déjà dans le panier"); return; }
+  cart.push(id); updateCartBadge(); saveCart(); showToast(l.titre+" ajouté au panier");
+}
+function removeCart(id){ cart = cart.filter(c=>c!==id); updateCartBadge(); saveCart(); renderCartPage(); }
+function updateCartBadge(){
+  const b = document.getElementById('cart-badge');
+  if(cart.length){ b.style.display='inline-block'; b.textContent = cart.length; } else b.style.display='none';
+}
+function renderCartPage(){
+  const el = document.getElementById('cart-content');
+  const items = cart.map(id=>listings.find(l=>l.id===id)).filter(Boolean);
+  if(!items.length){ el.innerHTML = '<p class="empty">Votre panier est vide.</p>'; document.getElementById('cart-total').style.display='none'; document.getElementById('pay-btn').style.display='none'; return; }
+  let total=0;
+  el.innerHTML = items.map(l=>{ total+=effectivePrice(l); const priceHtml = isOnSale(l) ? `<span style="text-decoration:line-through;opacity:.6;margin-right:6px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>` : fmtPrice(l.prix); return `<div class="admin-item"><img src="${thumb(l)}"><div class="info"><div class="t">${escapeHtml(l.titre)}</div><div>${priceHtml}</div></div><button class="iconbtn" onclick="removeCart(${l.id})">Retirer</button></div>`; }).join('');
+  document.getElementById('cart-total').style.display='block';
+  document.getElementById('cart-total').textContent = 'Total : '+fmtPrice(total);
+  document.getElementById('pay-btn').style.display='inline-block';
+}
+async function simulatePayment(){
+  if(!cart.length){ showToast("Votre panier est vide"); return; }
+  const items = cart.map(id=>listings.find(l=>l.id===id)).filter(Boolean);
+  if(PAYMENT_API_BASE){ await realCheckout(items); return; }
+  const total = items.reduce((s,l)=>s+effectivePrice(l),0);
+  const newSellers = new Set();
+  items.forEach(l=>{
+    const key = (l.email||'').toLowerCase().trim();
+    if(key && !firstSaleUsed.includes(key)) newSellers.add(key);
+  });
+  let commission = 0;
+  const itemDetails = items.map(l=>{
+    const key = (l.email||'').toLowerCase().trim();
+    const isFreeFirstSale = key && newSellers.has(key);
+    const price = effectivePrice(l);
+    const itemCommission = isFreeFirstSale ? 0 : Math.round(price*COMMISSION_RATE*100)/100;
+    commission += itemCommission;
+    return {id:l.id, titre:l.titre, prix:price, commission:itemCommission, freeFirstSale:isFreeFirstSale};
+  });
+  newSellers.forEach(key=>firstSaleUsed.push(key));
+  await saveFirstSaleUsed();
+  const sellerPayout = total - commission;
+  transactions.push({id:(transactions.length?Math.max(...transactions.map(t=>t.id))+1:1), total, commission, sellerPayout, items: itemDetails, ts:Date.now()});
+  await saveTransactions();
+  cart=[]; updateCartBadge(); saveCart();
+  updateAdminRevenue();
+  const freeCount = itemDetails.filter(i=>i.freeFirstSale).length;
+  const freeNote = freeCount ? `<p class="small" style="margin-top:6px;color:#e9d8ff">${freeCount} article(s) ont bénéficié de la commission offerte pour une première vente vendeur.</p>` : '';
+  const el = document.getElementById('cart-content');
+  el.innerHTML = `<div class="empty" style="color:#fff;opacity:1">
+    <div style="font-size:1.4rem;font-weight:900;margin-bottom:8px">Commande confirmée</div>
+    <p>Paiement simulé de ${fmtPrice(total)} effectué avec succès.</p>
+    <p class="small" style="margin-top:10px">Dont commission Morevia.fr : ${fmtPrice(commission)} · Reversé au(x) vendeur(s) : ${fmtPrice(sellerPayout)}</p>
+    ${freeNote}
+    <p style="margin-top:10px">Le(s) vendeur(s) va(vont) être notifié(s) et vous contacter pour la remise du bien.</p>
+  </div>`;
+  document.getElementById('cart-total').style.display='none';
+  document.getElementById('pay-btn').style.display='none';
+  showToast("Paiement simulé réussi.");
+}
+
+/* ---------- MESSAGES ---------- */
+let openThreadId = null;
+function openMessages(listingId){
+  openThreadId = listingId;
+  showPage('messages');
+}
+function renderMessagesPage(){
+  const el = document.getElementById('messages-list');
+  const ids = Object.keys(messages).map(Number);
+  const allIds = [...new Set([...(openThreadId!==null?[openThreadId]:[]), ...ids])];
+  if(!allIds.length){ el.innerHTML = '<p class="empty">Aucune conversation pour le moment. Ouvrez une annonce et cliquez sur "Contacter le vendeur".</p>'; return; }
+  el.innerHTML = allIds.map(id=>{
+    const l = listings.find(x=>x.id===id);
+    const thread = messages[id] || [];
+    return `<div class="thread">
+      <h4>${escapeHtml(l ? l.titre : 'Annonce #'+id)}</h4>
+      <div id="thread-msgs-${id}">${thread.map(m=>`<div class="msg ${m.from}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message. Envoyez le premier !</p>'}</div>
+      <div class="msg-input">
+        <input id="thread-input-${id}" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter')sendMessage(${id})">
+        <button onclick="sendMessage(${id})">Envoyer</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+async function sendMessage(id, from){
+  from = from || 'visiteur';
+  const input = document.getElementById('thread-input-'+id) || document.getElementById('admin-thread-input-'+id);
+  const text = input.value.trim(); if(!text) return;
+  if(!messages[id]) messages[id]=[];
+  messages[id].push({from, text, ts:Date.now()});
+  await saveMessages();
+  input.value='';
+  if(document.getElementById('page-messages').style.display==='block') renderMessagesPage();
+  if(adminUnlocked) renderAdminMessages();
+  showToast("Message envoyé");
+}
+
+/* ---------- MODALS / TOAST ---------- */
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+function closeAllModals(){ document.querySelectorAll('.modal-overlay.show').forEach(m=>m.classList.remove('show')); }
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.classList.remove('show'); });
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeAllModals(); });
+document.addEventListener('keydown', e=>{
+  if(document.getElementById('modal-ad').classList.contains('show')){
+    if(e.key==='ArrowLeft') adGalleryStep(-1);
+    if(e.key==='ArrowRight') adGalleryStep(1);
+  }
+});
+function showToast(msg){
+  const el = document.createElement('div'); el.className='toast'; el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(()=>el.remove(), 2400);
+}
+
+/* ---------- PAGES LEGALES ---------- */
+const LEGAL_CONTENT = {
+  mentions:["Mentions légales","Ce site est un modèle générique à des fins de démonstration. Éditeur : Morevia.fr. Hébergeur : à compléter. Directeur de publication : à compléter. Ce texte n'est pas un conseil juridique et doit être personnalisé avec vos informations réelles avant mise en ligne."],
+  cgu:["Conditions générales d'utilisation","L'utilisation de Morevia.fr implique l'acceptation des présentes CGU. Les utilisateurs s'engagent à publier des annonces conformes à la loi et à ne pas proposer de biens interdits à la vente. Modèle générique, à adapter."],
+  cgv:["Conditions générales de vente","Les transactions ont lieu directement entre acheteurs et vendeurs. Morevia.fr agit comme plateforme de mise en relation et n'est pas partie aux transactions. Une commission de 10% du prix de vente est prélevée par Morevia.fr sur chaque transaction réalisée via la plateforme ; le vendeur reçoit le montant restant, soit 90% du prix payé par l'acheteur. La toute première vente réalisée par un nouveau vendeur (identifié par son adresse e-mail) est offerte, sans commission. Le prix affiché à l'acheteur est le prix final, sans frais supplémentaires à sa charge. Modèle générique, à adapter avec vos conditions réelles avant mise en ligne."],
+  confidentialite:["Politique de confidentialité","Les données transmises (nom, e-mail, téléphone) sont utilisées uniquement pour permettre la mise en relation entre acheteurs et vendeurs. Modèle générique — à personnaliser selon le RGPD avant mise en production."],
+  cookies:["Politique des cookies","Ce site n'utilise pas de cookies de suivi publicitaire. Modèle générique à compléter selon les outils réellement utilisés."],
+  contact:["Contact","Une question ? Contactez-nous à l'adresse contact@monmarket.fr (à personnaliser)."],
+  faq:["Foire aux questions","Comment publier une annonce ? Rendez-vous sur \u00abPublier une annonce\u00bb dans le menu. Comment contacter un vendeur ? Ouvrez l\u2019annonce puis cliquez sur \u00abContacter le vendeur\u00bb. Y a-t-il des frais ? Morevia.fr pr\u00e9l\u00e8ve une commission de 10% sur le prix de vente lors de la transaction ; ce montant est d\u00e9duit de ce que re\u00e7oit le vendeur. La toute premi\u00e8re vente d'un nouveau vendeur est offerte, sans commission. L'acheteur ne paie jamais plus que le prix affich\u00e9 sur l'annonce."],
+  apropos2:["À propos de nous","Morevia.fr est une marketplace généraliste qui permet à toute personne d'acheter et de vendre facilement des objets d'occasion ou neufs, partout en France. Notre mission est simple : rendre la vente entre particuliers rapide, sûre et sans complication. Que vous cherchiez à vider vos placards, trouver une bonne affaire ou vendre un objet dont vous n'avez plus besoin, Morevia.fr vous met en relation directe avec des acheteurs et vendeurs de votre région, dans un cadre pensé pour la confiance : messagerie intégrée, fiches d'annonces détaillées, et un système de paiement simplifié. La plateforme se rémunère par une commission de 10% prélevée sur chaque vente réalisée, ce qui nous permet de continuer à améliorer le service sans jamais faire payer l'acheteur plus que le prix affiché."],
+  qui:["Qui sommes-nous ?","Morevia.fr est un projet construit par une petite équipe convaincue que vendre et acheter d'occasion devrait être aussi simple qu'un échange entre voisins. Nous ne sommes ni un grand groupe ni une multinationale : notre priorité est de proposer un site clair, honnête et agréable à utiliser, sans publicité intrusive ni fausses promesses. Nous améliorons continuellement la plateforme à partir des retours de nos utilisateurs, et nous restons joignables via la page Contact pour toute question, suggestion ou signalement. Ce texte est un modèle générique de présentation, à personnaliser avec les informations réelles de votre structure (nom légal, historique, équipe) avant mise en ligne."],
+  securite:["Conseils de sécurité","Privilégiez une remise en main propre dans un lieu public et fréquenté. Vérifiez l'objet avant de payer. Ne communiquez jamais de coordonnées bancaires par message. Méfiez-vous des prix anormalement bas."],
+  confiance:["Acheter en confiance","Consultez la description et les photos avec attention, posez vos questions au vendeur via la messagerie avant de vous déplacer, et privilégiez un paiement à la remise du bien."],
+  vendre:["Vendre efficacement","Ajoutez plusieurs photos nettes, rédigez une description honnête et précise, fixez un prix cohérent avec le marché, et répondez rapidement aux messages des acheteurs intéressés."]
+};
+function openLegal(key){
+  const [title, body] = LEGAL_CONTENT[key] || ["Information","Contenu à venir."];
+  document.getElementById('legal-title').textContent = title;
+  document.getElementById('legal-body').textContent = body;
+  openModal('modal-legal');
+}
+
+/* ---------- ADMIN ---------- */
+function openAdmin(){
+  openModal('modal-admin');
+  if(adminUnlocked){ document.getElementById('admin-pin-gate').style.display='none'; document.getElementById('admin-content').style.display='block'; renderAdminAds(); }
+}
+function checkAdminPin(){
+  const v = document.getElementById('admin-pin-input').value;
+  if(v===ADMIN_PIN){ adminUnlocked=true; document.getElementById('admin-pin-gate').style.display='none'; document.getElementById('admin-content').style.display='block'; renderAdminAds(); }
+  else{ showToast("Code incorrect"); document.getElementById('admin-pin-input').value=''; }
+}
+function setAdminTab(tab){
+  adminTab = tab;
+  document.getElementById('tab-btn-ads').classList.toggle('active', tab==='ads');
+  document.getElementById('tab-btn-msgs').classList.toggle('active', tab==='msgs');
+  document.getElementById('tab-btn-revenue').classList.toggle('active', tab==='revenue');
+  document.getElementById('admin-tab-ads').style.display = tab==='ads' ? 'block':'none';
+  document.getElementById('admin-tab-msgs').style.display = tab==='msgs' ? 'block':'none';
+  document.getElementById('admin-tab-revenue').style.display = tab==='revenue' ? 'block':'none';
+  if(tab==='msgs') renderAdminMessages();
+  if(tab==='revenue') updateAdminRevenue();
+}
+function updateAdminRevenue(){
+  const revTotalEl = document.getElementById('rev-total');
+  if(!revTotalEl) return;
+  const total = transactions.reduce((s,t)=>s+t.total,0);
+  const commission = transactions.reduce((s,t)=>s+t.commission,0);
+  const sellers = transactions.reduce((s,t)=>s+t.sellerPayout,0);
+  revTotalEl.textContent = fmtPrice(total);
+  document.getElementById('rev-commission').textContent = fmtPrice(commission);
+  document.getElementById('rev-sellers').textContent = fmtPrice(sellers);
+  document.getElementById('rev-count').textContent = transactions.length;
+  const listEl = document.getElementById('rev-list');
+  if(!transactions.length){ listEl.innerHTML = '<p class="empty">Aucune vente pour le moment.</p>'; return; }
+  listEl.innerHTML = transactions.slice().sort((a,b)=>b.ts-a.ts).map(t=>{
+    const date = new Date(t.ts).toLocaleString('fr-FR');
+    const titles = t.items.map(i=>escapeHtml(i.titre)+(i.freeFirstSale?' (offert)':'')).join(', ');
+    return `<div class="admin-item"><div class="info"><div class="t">${titles}</div><div class="small">${date} · Total ${fmtPrice(t.total)} · Commission ${fmtPrice(t.commission)}</div></div></div>`;
+  }).join('');
+}
+let selectedAdIds = [];
+let selectedMsgIds = [];
+async function toggleListingSold(id){
+  const l = listings.find(x=>x.id===id); if(!l) return;
+  l.vendu = !l.vendu;
+  await saveListings();
+  renderAdminAds(); renderAnnonces();
+  showToast(l.vendu ? "Annonce marquée comme vendue" : "Annonce remise en vente");
+}
+async function toggleListingSolde(id){
+  const l = listings.find(x=>x.id===id); if(!l) return;
+  if(isOnSale(l)){
+    if(!confirm("Retirer le solde en cours sur cette annonce ?")) return;
+    delete l.soldePrix; delete l.soldeExpire;
+    await saveListings();
+    renderAdminAds(); renderAnnonces();
+    showToast("Solde retiré");
+    return;
+  }
+  const input = prompt(`Prix soldé pour "${l.titre}" (prix normal : ${fmtPrice(l.prix)}) :`);
+  if(input===null) return;
+  const newPrice = parseFloat(input.replace(',','.'));
+  if(isNaN(newPrice) || newPrice<=0 || newPrice>=l.prix){ showToast("Prix soldé invalide (doit être positif et inférieur au prix normal)"); return; }
+  l.soldePrix = Math.round(newPrice*100)/100;
+  l.soldeExpire = Date.now() + 10*24*60*60*1000;
+  await saveListings();
+  renderAdminAds(); renderAnnonces();
+  showToast("Annonce mise en solde pour 10 jours");
+}
+function renderAdminAds(){
+  document.getElementById('admin-count').textContent = listings.length;
+  const el = document.getElementById('admin-tab-ads');
+  selectedAdIds = selectedAdIds.filter(id=>listings.some(l=>l.id===id));
+  if(!listings.length){ el.innerHTML = '<p class="empty">Aucune annonce.</p>'; return; }
+  const sorted = listings.slice().sort((a,b)=>b.ts-a.ts);
+  const allChecked = sorted.length && sorted.every(l=>selectedAdIds.includes(l.id));
+  el.innerHTML = `<div class="admin-item" style="background:transparent;border:none;padding:6px 10px">
+      <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin:0">
+        <input type="checkbox" id="ad-select-all" style="width:auto" ${allChecked?'checked':''} onchange="toggleSelectAllAds(this.checked)"> Tout sélectionner
+      </label>
+      <button class="iconbtn" id="ad-bulk-delete-btn" style="display:${selectedAdIds.length?'inline-block':'none'}" onclick="deleteSelectedListings()">Supprimer la sélection (<span id="ad-selected-count">${selectedAdIds.length}</span>)</button>
+    </div>` +
+    sorted.map(l=>`
+    <div class="admin-item">
+      <input type="checkbox" style="width:auto" ${selectedAdIds.includes(l.id)?'checked':''} onchange="toggleAdSelected(${l.id}, this.checked)">
+      <img src="${thumb(l)}">
+      <div class="info"><div class="t">${escapeHtml(l.titre)}${l.vendu?' <span style="color:#f43f5e">· Vendu</span>':''}${isOnSale(l)?' <span style="color:#f43f5e">· Solde jusqu\'au '+new Date(l.soldeExpire).toLocaleDateString('fr-FR')+'</span>':''}</div><div class="small">${escapeHtml(l.categorie||'')} · ${isOnSale(l) ? fmtPrice(l.prix)+' → '+fmtPrice(l.soldePrix) : fmtPrice(l.prix)} · ${escapeHtml(l.ville||'')} · ${escapeHtml(l.nom||'')}${l.email?' · '+escapeHtml(l.email):''}</div></div>
+      <button class="iconbtn" onclick="toggleListingSolde(${l.id})">${isOnSale(l)?'Retirer le solde':'Mettre en solde'}</button>
+      <button class="iconbtn" onclick="toggleListingSold(${l.id})">${l.vendu?'Remettre en vente':'Marquer vendu'}</button>
+      <button class="iconbtn" onclick="adminOpenMessages(${l.id})">Messages</button>
+      <button class="iconbtn" onclick="deleteListing(${l.id})">Supprimer</button>
+    </div>`).join('');
+}
+function toggleAdSelected(id, checked){
+  if(checked){ if(!selectedAdIds.includes(id)) selectedAdIds.push(id); }
+  else{ selectedAdIds = selectedAdIds.filter(x=>x!==id); }
+  renderAdminAds();
+}
+function toggleSelectAllAds(checked){
+  selectedAdIds = checked ? listings.map(l=>l.id) : [];
+  renderAdminAds();
+}
+async function deleteSelectedListings(){
+  if(!selectedAdIds.length) return;
+  if(!confirm(`Supprimer les ${selectedAdIds.length} annonce(s) sélectionnée(s) ?`)) return;
+  listings = listings.filter(l=>!selectedAdIds.includes(l.id));
+  selectedAdIds = [];
+  await saveListings();
+  cleanupCart(); cleanupFavorites(); updateCartBadge(); updateStats();
+  renderAdminAds(); renderAnnonces();
+  showToast("Annonces supprimées");
+}
+function adminOpenMessages(id){ setAdminTab('msgs'); openThreadId=id; renderAdminMessages(); }
+function renderAdminMessages(){
+  const el = document.getElementById('admin-tab-msgs');
+  const ids = [...new Set([...(openThreadId!==null?[openThreadId]:[]), ...Object.keys(messages).map(Number)])];
+  selectedMsgIds = selectedMsgIds.filter(id=>ids.includes(id));
+  if(!ids.length){ el.innerHTML = '<p class="empty">Aucun message.</p>'; return; }
+  const allChecked = ids.length && ids.every(id=>selectedMsgIds.includes(id));
+  const header = `<div class="admin-item" style="background:transparent;border:none;padding:6px 10px">
+      <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin:0">
+        <input type="checkbox" id="msg-select-all" style="width:auto" ${allChecked?'checked':''} onchange="toggleSelectAllMsgs(this.checked)"> Tout sélectionner
+      </label>
+      <button class="iconbtn" style="display:${selectedMsgIds.length?'inline-block':'none'}" onclick="deleteSelectedThreads()">Supprimer la sélection (<span id="msg-selected-count">${selectedMsgIds.length}</span>)</button>
+    </div>`;
+  el.innerHTML = header + ids.map(id=>{
+    const l = listings.find(x=>x.id===id);
+    const thread = messages[id] || [];
+    return `<div class="thread">
+      <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin-bottom:8px">
+        <input type="checkbox" style="width:auto" ${selectedMsgIds.includes(id)?'checked':''} onchange="toggleMsgSelected(${id}, this.checked)">
+        <h4 style="margin:0">${escapeHtml(l ? l.titre : 'Annonce #'+id)}</h4>
+      </label>
+      <div>${thread.map(m=>`<div class="msg ${m.from==='vendeur'?'vendeur':'visiteur'}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message.</p>'}</div>
+      <div class="msg-input">
+        <input id="admin-thread-input-${id}" placeholder="Répondre en tant que vendeur..." onkeydown="if(event.key==='Enter')sendMessage(${id},'vendeur')">
+        <button onclick="sendMessage(${id},'vendeur')">Envoyer</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleMsgSelected(id, checked){
+  if(checked){ if(!selectedMsgIds.includes(id)) selectedMsgIds.push(id); }
+  else{ selectedMsgIds = selectedMsgIds.filter(x=>x!==id); }
+  renderAdminMessages();
+}
+function toggleSelectAllMsgs(checked){
+  const ids = [...new Set([...(openThreadId!==null?[openThreadId]:[]), ...Object.keys(messages).map(Number)])];
+  selectedMsgIds = checked ? ids : [];
+  renderAdminMessages();
+}
+async function deleteSelectedThreads(){
+  if(!selectedMsgIds.length) return;
+  if(!confirm(`Supprimer les ${selectedMsgIds.length} conversation(s) sélectionnée(s) ?`)) return;
+  selectedMsgIds.forEach(id=>{ delete messages[id]; });
+  if(openThreadId!==null && selectedMsgIds.includes(openThreadId)) openThreadId=null;
+  selectedMsgIds = [];
+  await saveMessages();
+  renderAdminMessages();
+  showToast("Conversations supprimées");
+}
+async function deleteListing(id){
+  if(!confirm("Supprimer cette annonce ?")) return;
+  listings = listings.filter(l=>l.id!==id);
+  await saveListings();
+  cleanupCart(); cleanupFavorites(); updateCartBadge(); updateStats();
+  renderAdminAds(); renderAnnonces();
+  showToast("Annonce supprimée");
+}
+document.addEventListener('keydown', e=>{ if(e.ctrlKey && (e.key==='x'||e.key==='X')){ e.preventDefault(); openAdmin(); } });
+
+/* ---------- INIT ---------- */
+async function init(){
+  initCategories();
+  initFormSuggestions();
+  await loadListings();
+  await loadMessages();
+  await loadCart();
+  await loadFavorites();
+  await loadTransactions();
+  await loadFirstSaleUsed();
+  await loadSellerAccounts();
+  await handleStripeReturn();
+  await loadAuthToken();
+  await refreshAuthSession();
+  cleanupCart();
+  cleanupFavorites();
+  updateCartBadge();
+  updateStats();
+  showPage('accueil');
+  setInterval(async ()=>{
+    if(!document.getElementById('modal-admin').classList.contains('show')){
+      try{ const res = await window.storage.get(LISTINGS_KEY, true); if(res&&res.value){ listings=JSON.parse(res.value); updateStats(); if(document.getElementById('page-annonces').style.display==='block') renderAnnonces(); } }catch(e){}
+    }
+  }, 20000);
+}
+init();
+</script>
+</body>
+</html>
