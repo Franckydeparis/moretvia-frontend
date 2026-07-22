@@ -46,15 +46,15 @@ main{max-width:1200px;margin:auto;padding:34px 20px 60px}
 .card .price{font-size:1.3rem;font-weight:900}
 .card .city{font-size:.8rem;opacity:.85;margin-top:2px}
 .card .row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.iconbtn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 10px;border-radius:9px;font-size:.8rem;cursor:pointer}
-.iconbtn:hover{background:rgba(255,255,255,.28)}
+.iconbtn{background:#6d28d9;border:none;color:#fff;padding:7px 10px;border-radius:9px;font-size:.8rem;cursor:pointer}
+.iconbtn:hover{background:#7c3aed}
 .iconbtn.fav.active{background:#f43f5e}
-.btn{background:#fff;color:#5b21b6;border:none;padding:12px 20px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:.95rem}
+.btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:12px 20px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:.95rem;box-shadow:0 10px 20px rgba(0,0,0,.25)}
 .btn:hover{opacity:.9}
 .btn.outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}
-form label{display:block;font-size:.8rem;opacity:.85;margin:12px 0 4px;font-weight:bold}
-form input,form select,form textarea{width:100%;padding:11px;border-radius:10px;border:none;font-size:.95rem;font-family:inherit}
-form textarea{min-height:110px;resize:vertical}
+label{display:block;font-size:.8rem;opacity:.85;margin:12px 0 4px;font-weight:bold}
+input:not([type=checkbox]):not([type=radio]),select,textarea{width:100%;padding:11px;border-radius:10px;border:none;font-size:.95rem;font-family:inherit;box-sizing:border-box}
+textarea{min-height:110px;resize:vertical}
 .form-box{background:rgba(255,255,255,.08);padding:26px;border-radius:20px;max-width:640px}
 #preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 #preview img{width:80px;height:80px;object-fit:cover;border-radius:10px}
@@ -75,6 +75,7 @@ form textarea{min-height:110px;resize:vertical}
 footer{margin-top:40px;background:linear-gradient(135deg,#5b21b6,#8b5cf6);padding:44px 24px 30px}
 footer .cols{display:flex;justify-content:center;gap:60px;flex-wrap:wrap;max-width:1100px;margin:auto}
 footer h3{font-size:1rem}
+.linklike{color:#fff;background:none;border:none;cursor:pointer;font-size:.9rem;text-decoration:none}
 footer a,footer button.linklike{color:#fff;background:none;border:none;cursor:pointer;font-size:.9rem;display:block;padding:3px 0;text-align:left;text-decoration:none;opacity:.9}
 footer a:hover,footer button.linklike:hover{text-decoration:underline}
 footer hr{margin:26px 0;border-color:rgba(255,255,255,.2)}
@@ -141,6 +142,22 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
 .statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin:28px 0}
 .stat{background:rgba(255,255,255,.09);padding:18px;border-radius:18px;text-align:center;border:1px solid rgba(255,255,255,.14)}
 .stat b{display:block;font-size:1.6rem}
+.trust-badge{display:inline-flex;align-items:center;gap:5px;background:#ffffff;font-weight:900;font-size:.72rem;padding:6px 16px;border-radius:999px;vertical-align:middle;white-space:nowrap;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+.trust-badge.lg{font-size:1rem;padding:10px 22px;gap:7px}
+.seller-chip{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;font-weight:bold;border:none;padding:6px 14px;border-radius:999px;cursor:pointer;font-size:.95rem}
+.seller-chip:hover{opacity:.85}
+.stars{color:#facc15;letter-spacing:1px}
+.trust-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:18px 0}
+.trust-item{background:rgba(255,255,255,.08);border-radius:12px;padding:12px;text-align:center}
+.trust-item b{display:block;font-size:1.15rem}
+.review{background:rgba(255,255,255,.08);border-radius:14px;padding:14px;margin-bottom:10px}
+.review .rhead{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;opacity:.9;margin-bottom:6px}
+.verified-tag{display:inline-flex;align-items:center;gap:4px;background:#22c55e;color:#06210f;font-weight:900;font-size:.7rem;padding:3px 9px;border-radius:999px}
+.review-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+@media (max-width:520px){.review-form-grid{grid-template-columns:1fr}}
+#modal-seller .review-form-grid label{margin-top:0}
+#modal-seller textarea{min-height:150px;line-height:1.5}
+.admin-verify-toggle{display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:normal}
 
 </style>
 </head>
@@ -262,9 +279,9 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
         <div id="preview"></div>
         <hr style="border-color:rgba(255,255,255,.2);margin:22px 0">
         <label>Vos coordonnées (visibles par les acheteurs intéressés)</label>
-        <input id="nom" placeholder="Nom et prénom *" required style="margin-bottom:8px">
-        <input id="email" type="email" placeholder="Adresse e-mail *" required style="margin-bottom:8px">
-        <input id="telephone" type="tel" placeholder="Téléphone (optionnel)">
+        <input id="nom" name="nom" autocomplete="name" placeholder="Nom et prénom *" required style="margin-bottom:8px">
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="Adresse e-mail *" required style="margin-bottom:8px">
+        <input id="telephone" name="telephone" type="tel" autocomplete="tel" placeholder="Téléphone (optionnel)">
         <div id="stripe-connect-box" style="margin-top:16px;background:rgba(255,255,255,.06);border-radius:12px;padding:14px">
           <label style="margin:0 0 6px">Recevoir mes paiements par carte bleue</label>
           <p class="small" id="stripe-connect-status">Renseignez votre e-mail ci-dessus puis cliquez sur le bouton pour connecter votre compte de paiement (géré par Stripe, sécurisé).</p>
@@ -309,6 +326,13 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
     <p style="margin-top:16px" class="small">Pour en savoir plus sur l'équipe derrière le projet, consultez la page <button type="button" class="linklike" style="color:#fff;text-decoration:underline;display:inline;padding:0" onclick="openLegal('qui')">Qui sommes-nous ?</button> en bas de page.</p>
   </section>
 
+
+<!-- Trust system -->
+<section class="page" id="page-confiance">
+<h3>Indice de confiance</h3>
+<p class="small">Chaque vendeur affiche un indice de confiance sur 100, calculé à partir de la note moyenne laissée par les acheteurs (40 pts), du nombre de ventes réussies (25 pts), de l'ancienneté du compte (15 pts), de la vérification d'identité par l'équipe Moretvia.fr (10 pts) et du taux de réponse aux messages (10 pts). Cliquez sur le nom d'un vendeur depuis une annonce pour voir le détail et les avis laissés par d'autres acheteurs.</p>
+</section>
+
 </main>
 
 <!-- MODAL DETAIL ANNONCE -->
@@ -318,7 +342,7 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px" id="modal-ad-grid">
       <div class="modal-gallery">
         <div style="position:relative">
-          <img class="main" id="ad-img">
+          <img class="main" id="ad-img" onclick="openPhotoZoom()" style="cursor:zoom-in">
           <button class="gallery-arrow left" onclick="adGalleryStep(-1)" id="ad-gallery-prev" aria-label="Photo précédente">‹</button>
           <button class="gallery-arrow right" onclick="adGalleryStep(1)" id="ad-gallery-next" aria-label="Photo suivante">›</button>
         </div>
@@ -343,6 +367,48 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
   </div>
 </div>
 
+<!-- MODAL PHOTO AGRANDIE -->
+<div class="modal-overlay" id="modal-photo-zoom">
+  <div style="max-width:95vw;max-height:95vh;position:relative;padding:16px;border-radius:26px;background:linear-gradient(135deg,#7c3aed,#5b21b6);box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <button class="modal-close" onclick="closeModal('modal-photo-zoom')" style="position:absolute;top:-44px;right:0">×</button>
+    <img id="zoom-img" style="max-width:calc(95vw - 32px - 8px);max-height:calc(90vh - 32px - 8px);object-fit:contain;border-radius:14px;display:block;border:4px solid #ffffff" src="">
+  </div>
+</div>
+
+<!-- MODAL PROFIL VENDEUR -->
+<div class="modal-overlay" id="modal-seller">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal('modal-seller')">×</button>
+    <h2 id="seller-name" style="margin:0 0 8px"></h2>
+    <div id="seller-badge" style="margin-bottom:6px"></div>
+    <p class="small" id="seller-label" style="margin:0 0 4px;opacity:.85"></p>
+    <div id="seller-stars" style="margin-bottom:10px"></div>
+    <div class="trust-breakdown" id="seller-breakdown"></div>
+    <h3 style="margin:22px 0 10px">Avis des acheteurs</h3>
+    <div id="seller-reviews"></div>
+    <h3 style="margin:22px 0 10px">Laisser un avis</h3>
+    <div class="review-form-grid">
+      <div>
+        <label>Votre nom</label>
+        <input id="review-nom" name="review-nom" autocomplete="name" placeholder="Votre nom">
+      </div>
+      <div>
+        <label>Note</label>
+        <select id="review-rating">
+          <option value="5">★★★★★ Excellent</option>
+          <option value="4">★★★★☆ Bien</option>
+          <option value="3">★★★☆☆ Correct</option>
+          <option value="2">★★☆☆☆ Décevant</option>
+          <option value="1">★☆☆☆☆ Mauvais</option>
+        </select>
+      </div>
+    </div>
+    <label>Commentaire</label>
+    <textarea id="review-comment" placeholder="Décrivez votre expérience avec ce vendeur..."></textarea>
+    <button class="btn" style="margin-top:20px;width:100%" onclick="submitReview()">Publier mon avis</button>
+  </div>
+</div>
+
 <!-- MODAL COMPTE (connexion / inscription) -->
 <div class="modal-overlay" id="modal-auth">
   <div class="modal-box" style="max-width:420px">
@@ -353,18 +419,18 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
     </div>
     <div id="auth-tab-login">
       <label>Adresse e-mail</label>
-      <input id="login-email" type="email" placeholder="vous@exemple.fr">
+      <input id="login-email" name="login-email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
       <label>Mot de passe</label>
-      <input id="login-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      <input id="login-password" name="login-password" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
       <button class="btn" style="margin-top:16px;width:100%" onclick="doLogin()">Se connecter</button>
     </div>
     <div id="auth-tab-register" style="display:none">
       <label>Nom</label>
-      <input id="register-nom" placeholder="Votre nom">
+      <input id="register-nom" name="register-nom" autocomplete="name" placeholder="Votre nom">
       <label>Adresse e-mail</label>
-      <input id="register-email" type="email" placeholder="vous@exemple.fr">
+      <input id="register-email" name="register-email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
       <label>Mot de passe (8 caractères minimum)</label>
-      <input id="register-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doRegister()">
+      <input id="register-password" name="register-password" type="password" autocomplete="new-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doRegister()">
       <button class="btn" style="margin-top:16px;width:100%" onclick="doRegister()">Créer mon compte</button>
     </div>
   </div>
@@ -378,9 +444,9 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
     <p class="small"><span id="account-nom"></span> · <span id="account-email"></span></p>
     <h4 style="margin-bottom:6px">Changer mon mot de passe</h4>
     <label>Mot de passe actuel</label>
-    <input id="change-current-password" type="password" placeholder="••••••••">
+    <input id="change-current-password" name="change-current-password" type="password" autocomplete="current-password" placeholder="••••••••">
     <label>Nouveau mot de passe (8 caractères minimum)</label>
-    <input id="change-new-password" type="password" placeholder="••••••••">
+    <input id="change-new-password" name="change-new-password" type="password" autocomplete="new-password" placeholder="••••••••">
     <button class="btn" style="margin-top:12px;width:100%" onclick="doChangePassword()">Mettre à jour le mot de passe</button>
     <button class="btn outline" style="margin-top:20px;width:100%" onclick="doLogout()">Se déconnecter</button>
   </div>
@@ -400,7 +466,7 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
     <label>Ville</label>
     <input id="edit-ville" list="ville-suggestions">
     <label>Téléphone (optionnel)</label>
-    <input id="edit-telephone" type="tel">
+    <input id="edit-telephone" name="edit-telephone" type="tel" autocomplete="tel">
     <label>Description</label>
     <textarea id="edit-desc" rows="4"></textarea>
     <p class="small" style="margin-top:16px">Photos (4 maximum)</p>
@@ -436,8 +502,10 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
         <button id="tab-btn-ads" class="active" onclick="setAdminTab('ads')">Annonces (<span id="admin-count">0</span>)</button>
         <button id="tab-btn-msgs" onclick="setAdminTab('msgs')">Messages</button>
         <button id="tab-btn-revenue" onclick="setAdminTab('revenue')">Revenus</button>
+        <button id="tab-btn-sellers" onclick="setAdminTab('sellers')">Vendeurs</button>
       </div>
       <div id="admin-tab-ads"></div>
+      <div id="admin-tab-sellers" style="display:none"></div>
       <div id="admin-tab-revenue" style="display:none">
         <div class="statbar" style="margin-bottom:20px">
           <div class="stat"><b id="rev-total">0 €</b>Chiffre d'affaires</div>
@@ -482,29 +550,17 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
 </footer>
 
 <script>
-// --- Compatibilité stockage local (ajouté pour tester/héberger en dehors de la plateforme d'origine) ---
-// Le site utilise window.storage pour sauvegarder les annonces, favoris, messages, etc.
-// Cette API n'existe pas dans un navigateur normal : on la recrée ici avec localStorage,
-// pour que le site fonctionne tel quel en local ou une fois hébergé chez OVH.
-if (!window.storage) {
+/* Compatibilité stockage : si window.storage n'existe pas (site ouvert en local ou hébergé ailleurs
+   que sur la plateforme d'origine), on le remplace par un équivalent basé sur localStorage du
+   navigateur, pour que les annonces/messages/avis ajoutés soient bien conservés d'une visite à l'autre. */
+if(typeof window.storage === 'undefined'){
   window.storage = {
-    get: async (key) => {
-      const v = localStorage.getItem(key);
-      return { value: v !== null ? v : null };
-    },
-    set: async (key, value) => {
-      localStorage.setItem(key, value);
-      return true;
-    },
-    delete: async (key) => {
-      localStorage.removeItem(key);
-      return true;
-    }
+    async get(key){ const v = localStorage.getItem('mv_'+key); return {value: v}; },
+    async set(key, value){ localStorage.setItem('mv_'+key, value); },
+    async delete(key){ localStorage.removeItem('mv_'+key); }
   };
 }
-// Le code admin n'est plus stocké ici : il est vérifié par le serveur
-// (voir checkAdminPin), pour qu'il ne soit jamais visible dans le code du site.
-const BACKEND_URL = "https://moretvia-backend.onrender.com";
+const ADMIN_PIN = "6464";
 const LISTINGS_KEY = "moretvia-v1-listings";
 const MESSAGES_KEY = "moretvia-v1-messages";
 const CART_KEY = "moretvia-v1-cart";
@@ -513,9 +569,50 @@ const TRANSACTIONS_KEY = "moretvia-v1-transactions";
 const FIRST_SALE_KEY = "moretvia-v1-first-sale-used";
 const COMMISSION_RATE = 0.10;
 const SELLER_ACCOUNTS_KEY = "moretvia-v1-seller-stripe-accounts";
+const REVIEWS_KEY = "moretvia-v1-reviews";
+const VERIFIED_SELLERS_KEY = "moretvia-v1-verified-sellers";
+const USERS_KEY = "moretvia-v1-users";
 // URL de votre backend de paiement une fois déployé (voir dossier backend/README.md).
 // Pour retester en local : "http://localhost:4242" (nécessite les 3 terminaux lancés). Laissez vide ("") pour le mode paiement simulé.
 const PAYMENT_API_BASE = "";
+// Backend annonces (Railway) : quand une valeur est renseignée ici, les annonces sont
+// partagées entre tous les visiteurs/appareils via ce serveur, au lieu de rester locales.
+const LISTINGS_API_BASE = "https://moretvia-backend-production.up.railway.app";
+function backendToFrontend(l){
+  return {
+    id: Number(l.id),
+    titre: l.titre,
+    prix: l.prix,
+    categorie: l.categorie,
+    ville: l.ville || '',
+    nom: l.nom || '',
+    email: l.email || '',
+    telephone: l.telephone || '',
+    desc: l.description || '',
+    images: l.images || [],
+    ts: l.dateCreation ? new Date(l.dateCreation).getTime() : Date.now(),
+    vendu: !!l.vendu,
+    soldePrix: l.soldePrix || undefined,
+    soldeExpire: l.soldeExpire || undefined
+  };
+}
+function frontendToBackend(l){
+  return {
+    titre: l.titre,
+    description: l.desc || '',
+    prix: l.prix,
+    categorie: l.categorie || '',
+    images: l.images || [],
+    contact: l.telephone || l.email || '',
+    ville: l.ville || '',
+    nom: l.nom || '',
+    email: l.email || '',
+    telephone: l.telephone || '',
+    vendu: !!l.vendu,
+    soldePrix: l.soldePrix || null,
+    soldeExpire: l.soldeExpire || null
+  };
+}
 const CATEGORIES = ["Téléphonie","Informatique","Image & Son","Maison & Jardin","Mode","Véhicules","Sports & Loisirs","Enfants & Bébé","Animaux","Emploi","Immobilier","Autres"];
 const CATEGORIES_SHORT = {"Téléphonie":"TE","Informatique":"IN","Image & Son":"IS","Maison & Jardin":"MJ","Mode":"MO","Véhicules":"VE","Sports & Loisirs":"SL","Enfants & Bébé":"EB","Animaux":"AN","Emploi":"EM","Immobilier":"IM","Autres":"AU"};
 
@@ -565,9 +662,22 @@ let uploadedImages = [];
 let currentAdId = null;
 let adminUnlocked = false;
 let adminTab = 'ads';
+let reviews = [];
+let verifiedSellers = {};
+let currentAdSellerEmail = null;
 
 /* ---------- CHARGEMENT / STOCKAGE ---------- */
 async function loadListings(){
+  if(LISTINGS_API_BASE){
+    try{
+      const res = await fetch(LISTINGS_API_BASE+'/api/listings');
+      if(res.ok){
+        const data = await res.json();
+        listings = data.map(backendToFrontend);
+        return;
+      }
+    }catch(e){}
+  }
   try{ const res = await window.storage.get(LISTINGS_KEY, true); listings = res && res.value ? JSON.parse(res.value) : DEFAULT_LISTINGS; }
   catch(e){ listings = DEFAULT_LISTINGS; try{ await window.storage.set(LISTINGS_KEY, JSON.stringify(listings), true); }catch(e2){} }
 }
@@ -604,6 +714,26 @@ async function loadSellerAccounts(){
   catch(e){ sellerAccounts = {}; }
 }
 async function saveSellerAccounts(){ try{ await window.storage.set(SELLER_ACCOUNTS_KEY, JSON.stringify(sellerAccounts), true); }catch(e){} }
+async function loadReviews(){
+  try{ const res = await window.storage.get(REVIEWS_KEY, true); reviews = res && res.value ? JSON.parse(res.value) : []; }
+  catch(e){ reviews = []; }
+}
+async function saveReviews(){ try{ await window.storage.set(REVIEWS_KEY, JSON.stringify(reviews), true); }catch(e){} }
+async function loadVerifiedSellers(){
+  try{ const res = await window.storage.get(VERIFIED_SELLERS_KEY, true); verifiedSellers = res && res.value ? JSON.parse(res.value) : {}; }
+  catch(e){ verifiedSellers = {}; }
+}
+async function saveVerifiedSellers(){ try{ await window.storage.set(VERIFIED_SELLERS_KEY, JSON.stringify(verifiedSellers), true); }catch(e){} }
+/* Comptes utilisateurs en mode test (sans backend) : stockés localement, uniquement pour tester
+   le parcours compte/connexion tant qu'aucun vrai serveur d'authentification n'est branché.
+   Ce n'est pas sécurisé (mot de passe en clair) — à ne pas utiliser tel quel en production. */
+let localUsers = [];
+async function loadLocalUsers(){
+  try{ const res = await window.storage.get(USERS_KEY, true); localUsers = res && res.value ? JSON.parse(res.value) : []; }
+  catch(e){ localUsers = []; }
+}
+async function saveLocalUsers(){ try{ await window.storage.set(USERS_KEY, JSON.stringify(localUsers), true); }catch(e){} }
+function findLocalUser(email){ return localUsers.find(u=>u.email.toLowerCase()===String(email||'').toLowerCase().trim()); }
 
 /* ---------- PAIEMENT RÉEL (Stripe Connect) ---------- */
 async function connectSellerStripe(){
@@ -753,7 +883,7 @@ function cardHtml(l){
       <div class="cat-tag"><span class="cat-badge-sm">${CATEGORIES_SHORT[l.categorie]||'?'}</span>${escapeHtml(l.categorie||'')}</div>
       <h4>${escapeHtml(l.titre)}</h4>
       <div class="price">${priceHtml}</div>
-      <div class="city">${escapeHtml(l.ville||'-')}</div>
+      <div class="city">${escapeHtml(l.ville||'-')} · <span onclick="event.stopPropagation();openSellerProfileFromCard('${(l.email||'').replace(/'/g,"\\'")}')" style="cursor:pointer">${trustBadgeHtml(l.email)}</span></div>
       <div class="row">
         <button class="iconbtn fav ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav(${l.id})">Favori</button>
         ${sold ? '' : `<button class="iconbtn" onclick="event.stopPropagation();addCart(${l.id})">Ajouter</button>
@@ -777,6 +907,11 @@ function adGalleryStep(dir){
   currentAdImgIndex = (currentAdImgIndex + dir + currentAdImages.length) % currentAdImages.length;
   renderAdGallery();
 }
+function openPhotoZoom(){
+  if(!currentAdImages.length) return;
+  document.getElementById('zoom-img').src = currentAdImages[currentAdImgIndex];
+  openModal('modal-photo-zoom');
+}
 function openAd(id){
   const l = listings.find(x=>x.id===id); if(!l) return;
   currentAdId = id;
@@ -789,7 +924,8 @@ function openAd(id){
     ? `<span style="text-decoration:line-through;opacity:.6;font-size:1.2rem;margin-right:8px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>`
     : fmtPrice(l.prix);
   document.getElementById('ad-ville').textContent = l.ville||'-';
-  document.getElementById('ad-nom').textContent = l.nom||'-';
+  currentAdSellerEmail = l.email||'';
+  document.getElementById('ad-nom').innerHTML = `<button type="button" class="seller-chip" onclick="openSellerProfile()">${escapeHtml(l.nom||'-')}</button> ${trustBadgeHtml(l.email)}`;
   const telRow = document.getElementById('ad-tel-row');
   if(l.telephone){ telRow.style.display='block'; document.getElementById('ad-tel').textContent = l.telephone; } else { telRow.style.display='none'; }
   document.getElementById('ad-desc').textContent = l.desc||'';
@@ -826,7 +962,14 @@ async function saveAuthToken(token){
   }catch(e){}
 }
 async function refreshAuthSession(){
-  if(!PAYMENT_API_BASE || !authToken){ updateAccountNav(); return; }
+  if(!authToken){ updateAccountNav(); return; }
+  if(!PAYMENT_API_BASE){
+    const u = findLocalUser(authToken);
+    currentUser = u ? {nom:u.nom, email:u.email} : null;
+    if(!currentUser) await saveAuthToken(null);
+    updateAccountNav();
+    return;
+  }
   try{
     const res = await fetch(PAYMENT_API_BASE+'/api/auth/me', { headers:{ 'Authorization':'Bearer '+authToken } });
     if(!res.ok){ await saveAuthToken(null); currentUser=null; updateAccountNav(); return; }
@@ -840,7 +983,6 @@ function updateAccountNav(){
   nav.textContent = currentUser ? (currentUser.nom || currentUser.email) : 'Connexion';
 }
 function openAccountArea(){
-  if(!PAYMENT_API_BASE){ showToast("Le système de comptes n'est pas encore configuré côté serveur (voir backend/README.md)"); return; }
   if(currentUser){
     document.getElementById('account-nom').textContent = currentUser.nom || '-';
     document.getElementById('account-email').textContent = currentUser.email;
@@ -863,6 +1005,17 @@ async function doRegister(){
   const email = document.getElementById('register-email').value.trim();
   const password = document.getElementById('register-password').value;
   if(!email || !password){ showToast("Merci de remplir l'e-mail et le mot de passe"); return; }
+  if(password.length < 8){ showToast("Le mot de passe doit contenir au moins 8 caractères"); return; }
+  if(!PAYMENT_API_BASE){
+    if(findLocalUser(email)){ showToast("Un compte existe déjà avec cet e-mail"); return; }
+    localUsers.push({nom, email, password});
+    await saveLocalUsers();
+    await saveAuthToken(email.toLowerCase().trim());
+    currentUser = {nom, email};
+    updateAccountNav(); closeModal('modal-auth');
+    showToast("Compte créé (mode test), bienvenue !");
+    return;
+  }
   try{
     const res = await fetch(PAYMENT_API_BASE+'/api/auth/register', {
       method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password, nom})
@@ -878,6 +1031,15 @@ async function doLogin(){
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   if(!email || !password){ showToast("Merci de remplir l'e-mail et le mot de passe"); return; }
+  if(!PAYMENT_API_BASE){
+    const u = findLocalUser(email);
+    if(!u || u.password !== password){ showToast("E-mail ou mot de passe incorrect"); return; }
+    await saveAuthToken(u.email.toLowerCase().trim());
+    currentUser = {nom:u.nom, email:u.email};
+    updateAccountNav(); closeModal('modal-auth');
+    showToast("Connexion réussie (mode test)");
+    return;
+  }
   try{
     const res = await fetch(PAYMENT_API_BASE+'/api/auth/login', {
       method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password})
@@ -898,6 +1060,17 @@ async function doChangePassword(){
   const currentPassword = document.getElementById('change-current-password').value;
   const newPassword = document.getElementById('change-new-password').value;
   if(!currentPassword || !newPassword){ showToast("Merci de remplir les deux champs"); return; }
+  if(newPassword.length < 8){ showToast("Le nouveau mot de passe doit contenir au moins 8 caractères"); return; }
+  if(!PAYMENT_API_BASE){
+    const u = findLocalUser(currentUser && currentUser.email);
+    if(!u || u.password !== currentPassword){ showToast("Mot de passe actuel incorrect"); return; }
+    u.password = newPassword;
+    await saveLocalUsers();
+    document.getElementById('change-current-password').value='';
+    document.getElementById('change-new-password').value='';
+    showToast("Mot de passe mis à jour (mode test)");
+    return;
+  }
   try{
     const res = await fetch(PAYMENT_API_BASE+'/api/auth/change-password', {
       method:'POST', headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+authToken}, body: JSON.stringify({currentPassword, newPassword})
@@ -990,6 +1163,11 @@ async function saveEditedPhotos(){
   l.telephone = document.getElementById('edit-telephone').value.trim();
   l.desc = document.getElementById('edit-desc').value.trim();
   l.images = editPhotosDraft.slice();
+  if(LISTINGS_API_BASE){
+    try{
+      await fetch(LISTINGS_API_BASE+'/api/listings/'+l.id, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(frontendToBackend(l)) });
+    }catch(e){}
+  }
   await saveListings();
   closeModal('modal-edit-photos');
   renderAnnonces();
@@ -1035,9 +1213,26 @@ async function publishAd(e){
   if(!titre||!prix||!ville||!nom||!email){ showToast("Merci de remplir tous les champs obligatoires (*)"); return; }
   if(isNaN(prix) || prix<=0){ showToast("Merci d'indiquer un prix valide"); return; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast("Merci d'indiquer une adresse e-mail valide"); return; }
-  const newId = listings.length ? Math.max(...listings.map(x=>x.id))+1 : 1;
-  listings.push({id:newId, titre, prix, categorie, ville, nom, email, telephone, desc, images: uploadedImages.length?uploadedImages:[], ts:Date.now()});
-  await saveListings();
+  const draft = {titre, prix, categorie, ville, nom, email, telephone, desc, images: uploadedImages.length?uploadedImages:[], ts:Date.now(), vendu:false};
+  if(LISTINGS_API_BASE){
+    try{
+      const res = await fetch(LISTINGS_API_BASE+'/api/listings', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(frontendToBackend(draft))
+      });
+      const data = await res.json();
+      if(!res.ok){ showToast(data.error || "Erreur lors de la publication"); return; }
+      listings.push(backendToFrontend(data));
+    }catch(err){
+      showToast("Serveur injoignable, annonce enregistrée uniquement sur cet appareil");
+      const newId = listings.length ? Math.max(...listings.map(x=>x.id))+1 : 1;
+      listings.push({id:newId, ...draft});
+      await saveListings();
+    }
+  } else {
+    const newId = listings.length ? Math.max(...listings.map(x=>x.id))+1 : 1;
+    listings.push({id:newId, ...draft});
+    await saveListings();
+  }
   e.target.reset();
   document.getElementById('preview').innerHTML=''; uploadedImages=[];
   showToast("Annonce publiée.");
@@ -1121,6 +1316,113 @@ async function simulatePayment(){
   showToast("Paiement simulé réussi.");
 }
 
+/* ---------- CONFIANCE / AVIS ---------- */
+function sellerKey(email){ return (email||'').toLowerCase().trim(); }
+function computeTrust(email){
+  const key = sellerKey(email);
+  if(!key) return {score:0,avgRating:0,reviewCount:0,salesCount:0,memberSince:null,verified:false,reactivityPct:null,label:'Nouveau vendeur'};
+  const sellerReviews = reviews.filter(r=>sellerKey(r.sellerEmail)===key);
+  const reviewCount = sellerReviews.length;
+  const avgRating = reviewCount ? sellerReviews.reduce((s,r)=>s+r.rating,0)/reviewCount : 0;
+  const sellerListings = listings.filter(l=>sellerKey(l.email)===key);
+  const salesCount = sellerListings.filter(l=>l.vendu).length;
+  const firstTs = sellerListings.length ? Math.min(...sellerListings.map(l=>l.ts)) : null;
+  const memberSince = firstTs ? new Date(firstTs) : null;
+  const daysSince = firstTs ? (Date.now()-firstTs)/86400000 : 0;
+  const verified = !!verifiedSellers[key];
+  const sellerListingIds = sellerListings.map(l=>l.id);
+  const threadsWithMsg = sellerListingIds.filter(id=>(messages[id]||[]).some(m=>m.from==='visiteur'));
+  const threadsWithReply = threadsWithMsg.filter(id=>(messages[id]||[]).some(m=>m.from==='vendeur'));
+  const reactivityPct = threadsWithMsg.length ? threadsWithReply.length/threadsWithMsg.length : null;
+
+  const ratingScore = reviewCount ? (avgRating/5)*40 : 20;
+  const salesScore = Math.min(salesCount,10)/10*25;
+  const ageScore = Math.min(daysSince/180,1)*15;
+  const verifiedScore = verified?10:0;
+  const reactivityScore = (reactivityPct===null ? 0.7 : reactivityPct)*10;
+
+  let score = Math.round(ratingScore+salesScore+ageScore+verifiedScore+reactivityScore);
+  score = Math.max(0, Math.min(100, score));
+
+  let label = 'Historique limité';
+  if(score>=80) label='Excellente confiance';
+  else if(score>=60) label='Bonne confiance';
+  else if(score>=40) label='Confiance correcte';
+
+  const hasRating = reviewCount > 0;
+  if(!hasRating) label = 'Vendeur non encore noté';
+
+  return {score, avgRating, reviewCount, salesCount, memberSince, verified, reactivityPct, label, hasRating};
+}
+function badgeStarsHtml(rating, big){
+  const full = Math.round(rating);
+  const size = big ? '1.3em' : '1.05em';
+  let out = '';
+  for(let i=1;i<=5;i++){
+    out += i<=full
+      ? `<span style="color:#8b0000;font-size:${size};line-height:0">★</span>`
+      : `<span style="color:#d8d3e0;font-size:${size};line-height:0">★</span>`;
+  }
+  return out;
+}
+function trustBadgeHtml(email, big){
+  const t = computeTrust(email);
+  const title = t.hasRating ? `${t.label} · ${t.reviewCount} avis` : "Ce vendeur n'a pas encore reçu d'avis d'acheteur";
+  return `<span class="trust-badge${big?' lg':''}" title="${title}">${badgeStarsHtml(t.avgRating, big)}</span>`;
+}
+function starsHtml(rating){
+  const full = Math.round(rating);
+  return `<span class="stars">${'★'.repeat(full)}${'☆'.repeat(5-full)}</span>`;
+}
+function openSellerProfile(){
+  if(!currentAdSellerEmail){ showToast("Vendeur inconnu"); return; }
+  closeModal('modal-ad');
+  renderSellerProfile();
+  openModal('modal-seller');
+}
+function openSellerProfileFromCard(email){
+  currentAdSellerEmail = email || '';
+  openSellerProfile();
+}
+function renderSellerProfile(){
+  const email = currentAdSellerEmail;
+  const key = sellerKey(email);
+  const listing = listings.find(l=>sellerKey(l.email)===key);
+  const nom = listing ? listing.nom : email;
+  const t = computeTrust(email);
+  document.getElementById('seller-name').textContent = nom || 'Vendeur';
+  document.getElementById('seller-badge').innerHTML = trustBadgeHtml(email, true) + (t.verified ? ' <span class="verified-tag">✔ Identité vérifiée</span>' : '');
+  document.getElementById('seller-label').textContent = t.label;
+  document.getElementById('seller-stars').innerHTML = starsHtml(t.avgRating) + ` <span class="small">(${t.reviewCount} avis)</span>`;
+  document.getElementById('seller-breakdown').innerHTML = `
+    <div class="trust-item"><b>${t.salesCount}</b>Ventes réussies</div>
+    <div class="trust-item"><b>${t.reviewCount ? t.avgRating.toFixed(1) : '–'}</b>Note moyenne</div>
+    <div class="trust-item"><b>${t.memberSince ? t.memberSince.toLocaleDateString('fr-FR') : '–'}</b>Membre depuis</div>
+    <div class="trust-item"><b>${t.reactivityPct===null ? '–' : Math.round(t.reactivityPct*100)+'%'}</b>Taux de réponse</div>
+  `;
+  const revList = reviews.filter(r=>sellerKey(r.sellerEmail)===key).sort((a,b)=>b.ts-a.ts);
+  document.getElementById('seller-reviews').innerHTML = revList.length
+    ? revList.map(r=>`<div class="review"><div class="rhead"><strong>${escapeHtml(r.authorNom||'Acheteur')}</strong><span>${starsHtml(r.rating)} · ${new Date(r.ts).toLocaleDateString('fr-FR')}</span></div><div>${escapeHtml(r.comment||'')}</div></div>`).join('')
+    : '<p class="empty">Aucun avis pour le moment.</p>';
+  document.getElementById('review-nom').value='';
+  document.getElementById('review-comment').value='';
+  document.getElementById('review-rating').value='5';
+}
+async function submitReview(){
+  const email = currentAdSellerEmail;
+  if(!email){ showToast("Vendeur inconnu"); return; }
+  const authorNom = document.getElementById('review-nom').value.trim();
+  const rating = parseInt(document.getElementById('review-rating').value,10);
+  const comment = document.getElementById('review-comment').value.trim();
+  if(!authorNom){ showToast("Merci d'indiquer votre nom"); return; }
+  if(!comment){ showToast("Merci d'ajouter un commentaire"); return; }
+  reviews.push({id:(reviews.length?Math.max(...reviews.map(r=>r.id))+1:1), sellerEmail: email, listingId: currentAdId, rating, comment, authorNom, ts: Date.now()});
+  await saveReviews();
+  renderSellerProfile();
+  renderAnnonces();
+  showToast("Avis publié, merci !");
+}
+
 /* ---------- MESSAGES ---------- */
 let openThreadId = null;
 function openMessages(listingId){
@@ -1191,7 +1493,7 @@ const LEGAL_CONTENT = {
   apropos2:["À propos de nous","Moretvia.fr est une marketplace généraliste qui permet à toute personne d'acheter et de vendre facilement des objets d'occasion ou neufs, partout en France. Notre mission est simple : rendre la vente entre particuliers rapide, sûre et sans complication. Que vous cherchiez à vider vos placards, trouver une bonne affaire ou vendre un objet dont vous n'avez plus besoin, Moretvia.fr vous met en relation directe avec des acheteurs et vendeurs de votre région, dans un cadre pensé pour la confiance : messagerie intégrée, fiches d'annonces détaillées, et un système de paiement simplifié. La plateforme se rémunère par une commission de 10% prélevée sur chaque vente réalisée, ce qui nous permet de continuer à améliorer le service sans jamais faire payer l'acheteur plus que le prix affiché."],
   qui:["Qui sommes-nous ?","Moretvia.fr est un projet construit par une petite équipe convaincue que vendre et acheter d'occasion devrait être aussi simple qu'un échange entre voisins. Nous ne sommes ni un grand groupe ni une multinationale : notre priorité est de proposer un site clair, honnête et agréable à utiliser, sans publicité intrusive ni fausses promesses. Nous améliorons continuellement la plateforme à partir des retours de nos utilisateurs, et nous restons joignables via la page Contact pour toute question, suggestion ou signalement. Ce texte est un modèle générique de présentation, à personnaliser avec les informations réelles de votre structure (nom légal, historique, équipe) avant mise en ligne."],
   securite:["Conseils de sécurité","Privilégiez une remise en main propre dans un lieu public et fréquenté. Vérifiez l'objet avant de payer. Ne communiquez jamais de coordonnées bancaires par message. Méfiez-vous des prix anormalement bas."],
-  confiance:["Acheter en confiance","Consultez la description et les photos avec attention, posez vos questions au vendeur via la messagerie avant de vous déplacer, et privilégiez un paiement à la remise du bien."],
+  confiance:["Acheter en confiance","Consultez la description et les photos avec attention, posez vos questions au vendeur via la messagerie avant de vous déplacer, et privilégiez un paiement à la remise du bien. Cliquez sur le nom du vendeur depuis une annonce pour consulter son indice de confiance, son ancienneté, ses ventes réussies et les avis laissés par d'autres acheteurs."],
   vendre:["Vendre efficacement","Ajoutez plusieurs photos nettes, rédigez une description honnête et précise, fixez un prix cohérent avec le marché, et répondez rapidement aux messages des acheteurs intéressés."]
 };
 function openLegal(key){
@@ -1206,42 +1508,24 @@ function openAdmin(){
   openModal('modal-admin');
   if(adminUnlocked){ document.getElementById('admin-pin-gate').style.display='none'; document.getElementById('admin-content').style.display='block'; renderAdminAds(); }
 }
-async function checkAdminPin(){
+function checkAdminPin(){
   const v = document.getElementById('admin-pin-input').value;
-  const btn = document.querySelector('#admin-pin-gate button.btn');
-  if(btn){ btn.disabled = true; }
-  try{
-    const res = await fetch(`${BACKEND_URL}/api/admin/verify-pin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pin: v }),
-    });
-    const data = await res.json();
-    if(res.ok && data.ok){
-      adminUnlocked=true;
-      document.getElementById('admin-pin-gate').style.display='none';
-      document.getElementById('admin-content').style.display='block';
-      renderAdminAds();
-    } else {
-      showToast(data.error || "Code incorrect");
-      document.getElementById('admin-pin-input').value='';
-    }
-  }catch(e){
-    showToast("Impossible de contacter le serveur pour vérifier le code");
-  }finally{
-    if(btn){ btn.disabled = false; }
-  }
+  if(v===ADMIN_PIN){ adminUnlocked=true; document.getElementById('admin-pin-gate').style.display='none'; document.getElementById('admin-content').style.display='block'; renderAdminAds(); }
+  else{ showToast("Code incorrect"); document.getElementById('admin-pin-input').value=''; }
 }
 function setAdminTab(tab){
   adminTab = tab;
   document.getElementById('tab-btn-ads').classList.toggle('active', tab==='ads');
   document.getElementById('tab-btn-msgs').classList.toggle('active', tab==='msgs');
   document.getElementById('tab-btn-revenue').classList.toggle('active', tab==='revenue');
+  document.getElementById('tab-btn-sellers').classList.toggle('active', tab==='sellers');
   document.getElementById('admin-tab-ads').style.display = tab==='ads' ? 'block':'none';
   document.getElementById('admin-tab-msgs').style.display = tab==='msgs' ? 'block':'none';
   document.getElementById('admin-tab-revenue').style.display = tab==='revenue' ? 'block':'none';
+  document.getElementById('admin-tab-sellers').style.display = tab==='sellers' ? 'block':'none';
   if(tab==='msgs') renderAdminMessages();
   if(tab==='revenue') updateAdminRevenue();
+  if(tab==='sellers') renderAdminSellers();
 }
 function updateAdminRevenue(){
   const revTotalEl = document.getElementById('rev-total');
@@ -1260,6 +1544,25 @@ function updateAdminRevenue(){
     const titles = t.items.map(i=>escapeHtml(i.titre)+(i.freeFirstSale?' (offert)':'')).join(', ');
     return `<div class="admin-item"><div class="info"><div class="t">${titles}</div><div class="small">${date} · Total ${fmtPrice(t.total)} · Commission ${fmtPrice(t.commission)}</div></div></div>`;
   }).join('');
+}
+function renderAdminSellers(){
+  const el = document.getElementById('admin-tab-sellers');
+  const emails = [...new Set(listings.map(l=>sellerKey(l.email)).filter(Boolean))];
+  if(!emails.length){ el.innerHTML = '<p class="empty">Aucun vendeur.</p>'; return; }
+  el.innerHTML = emails.map(key=>{
+    const listing = listings.find(l=>sellerKey(l.email)===key);
+    const t = computeTrust(key);
+    return `<div class="admin-item">
+      <div class="info"><div class="t">${escapeHtml(listing?listing.nom:key)} · Score ${t.score}</div><div class="small">${escapeHtml(key)} · ${t.salesCount} vente(s) · ${t.reviewCount} avis</div></div>
+      <label class="admin-verify-toggle"><input type="checkbox" ${t.verified?'checked':''} onchange="toggleSellerVerified('${key.replace(/'/g,"\\'")}', this.checked)"> Identité vérifiée</label>
+    </div>`;
+  }).join('');
+}
+async function toggleSellerVerified(key, checked){
+  if(checked) verifiedSellers[key] = true; else delete verifiedSellers[key];
+  await saveVerifiedSellers();
+  renderAdminSellers();
+  renderAnnonces();
 }
 let selectedAdIds = [];
 let selectedMsgIds = [];
@@ -1385,6 +1688,9 @@ async function deleteSelectedThreads(){
 async function deleteListing(id){
   if(!confirm("Supprimer cette annonce ?")) return;
   listings = listings.filter(l=>l.id!==id);
+  if(LISTINGS_API_BASE){
+    try{ await fetch(LISTINGS_API_BASE+'/api/listings/'+id, { method:'DELETE' }); }catch(e){}
+  }
   await saveListings();
   cleanupCart(); cleanupFavorites(); updateCartBadge(); updateStats();
   renderAdminAds(); renderAnnonces();
@@ -1403,7 +1709,10 @@ async function init(){
   await loadTransactions();
   await loadFirstSaleUsed();
   await loadSellerAccounts();
+  await loadReviews();
+  await loadVerifiedSellers();
   await handleStripeReturn();
+  await loadLocalUsers();
   await loadAuthToken();
   await refreshAuthSession();
   cleanupCart();
