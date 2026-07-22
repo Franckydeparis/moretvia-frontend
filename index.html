@@ -502,7 +502,9 @@ if (!window.storage) {
     }
   };
 }
-const ADMIN_PIN = "6464";
+// Le code admin n'est plus stocké ici : il est vérifié par le serveur
+// (voir checkAdminPin), pour qu'il ne soit jamais visible dans le code du site.
+const BACKEND_URL = "https://moretvia-backend.onrender.com";
 const LISTINGS_KEY = "moretvia-v1-listings";
 const MESSAGES_KEY = "moretvia-v1-messages";
 const CART_KEY = "moretvia-v1-cart";
@@ -1204,10 +1206,31 @@ function openAdmin(){
   openModal('modal-admin');
   if(adminUnlocked){ document.getElementById('admin-pin-gate').style.display='none'; document.getElementById('admin-content').style.display='block'; renderAdminAds(); }
 }
-function checkAdminPin(){
+async function checkAdminPin(){
   const v = document.getElementById('admin-pin-input').value;
-  if(v===ADMIN_PIN){ adminUnlocked=true; document.getElementById('admin-pin-gate').style.display='none'; document.getElementById('admin-content').style.display='block'; renderAdminAds(); }
-  else{ showToast("Code incorrect"); document.getElementById('admin-pin-input').value=''; }
+  const btn = document.querySelector('#admin-pin-gate button.btn');
+  if(btn){ btn.disabled = true; }
+  try{
+    const res = await fetch(`${BACKEND_URL}/api/admin/verify-pin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: v }),
+    });
+    const data = await res.json();
+    if(res.ok && data.ok){
+      adminUnlocked=true;
+      document.getElementById('admin-pin-gate').style.display='none';
+      document.getElementById('admin-content').style.display='block';
+      renderAdminAds();
+    } else {
+      showToast(data.error || "Code incorrect");
+      document.getElementById('admin-pin-input').value='';
+    }
+  }catch(e){
+    showToast("Impossible de contacter le serveur pour vérifier le code");
+  }finally{
+    if(btn){ btn.disabled = false; }
+  }
 }
 function setAdminTab(tab){
   adminTab = tab;
