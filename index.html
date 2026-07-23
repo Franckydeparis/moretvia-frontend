@@ -2092,10 +2092,17 @@ function toggleSelectAllMsgs(checked){
 async function deleteSelectedThreads(){
   if(!selectedMsgIds.length) return;
   if(!confirm(`Supprimer les ${selectedMsgIds.length} conversation(s) sélectionnée(s) ?`)) return;
-  selectedMsgIds.forEach(id=>{ delete messages[id]; });
+  if(LISTINGS_API_BASE){
+    await Promise.all(selectedMsgIds.map(id=>
+      fetch(LISTINGS_API_BASE+'/api/messages/'+id, {method:'DELETE'}).catch(()=>{})
+    ));
+    await loadMessages();
+  } else {
+    selectedMsgIds.forEach(id=>{ delete messages[id]; });
+    await saveMessages();
+  }
   if(openThreadId!==null && selectedMsgIds.includes(openThreadId)) openThreadId=null;
   selectedMsgIds = [];
-  await saveMessages();
   renderAdminMessages();
   showToast("Conversations supprimées");
 }
