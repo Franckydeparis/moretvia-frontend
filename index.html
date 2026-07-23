@@ -913,24 +913,32 @@ async function handleStripeReturn(){
   }
 }
 async function realCheckout(items){
-  const withAccounts = items.map(l=>({
-    id:l.id, titre:l.titre, prix:effectivePrice(l),
-    sellerEmail:(l.email||'').toLowerCase().trim(),
-    sellerStripeAccountId: sellerAccounts[(l.email||'').toLowerCase().trim()] || ''
-  }));
-  const notReady = withAccounts.filter(i=>!i.sellerStripeAccountId);
-  if(notReady.length){
-    showToast("Certains vendeurs n'ont pas encore connecté leur compte de paiement : "+notReady.map(i=>i.titre).join(', '));
-    return;
+    const withAccounts = [];
+    for(const l of items){
+      const sellerEmail = (l.email||'').toLowerCase().trim();
+      let accId = sellerAccounts[sellerEmail];
+          if(!accId){
+        try{
+          const r = await fetch(PAYMENT_API_BASE+'/api/seller-account-status?email='+encodeURIComponent(sellerEmail));
+                  const d = await r.json();
+          if(d.accountId){ accId = d.accountId; sellerAccounts[sellerEmail] = accId; await saveSellerAccounts(); }
+  }catch(e){}
   }
-  try{
-    const res = await fetch(PAYMENT_API_BASE+'/api/create-checkout-session', {
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items: withAccounts})
-    });
-    const data = await res.json();
-    if(data.url) window.location.href = data.url;
-    else showToast("Erreur lors de la création du paiement");
-  }catch(e){ showToast("Impossible de contacter le serveur de paiement"); }
+      withAccounts.push({id:l.id, titre:l.titre, prix:effectivePrice(l), sellerEmail, sellerStripeAccountId: accId || ''});
+  }
+    const notReady = withAccounts.filter(i=>!i.sellerStripeAccountId);
+    if(notReady.length){
+      showToast("Certains vendeurs n'ont pas encore connecté leur compte de paiement : "+notReady.map(i=>i.titre).join(', '));
+          return;
+  }
+    try{
+      const res = await fetch(PAYMENT_API_BASE+'/api/create-checkout-session', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items: withAccounts})
+      });
+          const data = await res.json();
+      if(data.url) window.location.href = data.url;
+      else showToast("Erreur lors de la création du paiement");
+    }catch(e){ showToast("Impossible de contacter le serveur de paiement"); }
 }
 async function saveFavorites(){ try{ await window.storage.set(FAVORITES_KEY, JSON.stringify(favorites), false); }catch(e){} }
 function cleanupCart(){ const before=cart.length; cart = cart.filter(id => listings.some(l=>l.id===id)); if(cart.length!==before) saveCart(); }
