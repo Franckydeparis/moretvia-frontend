@@ -11,7 +11,7 @@ header{padding:16px 20px 20px;text-align:center;background:linear-gradient(135de
 .header-inner{display:flex;align-items:center;justify-content:center;gap:22px;max-width:900px;margin:0 auto}
 .header-logo{width:52px;height:52px;flex-shrink:0}
 .header-text{flex:1;min-width:0}
-header h1{margin:0 0 4px;font-size:2.1rem;font-weight:900;text-shadow:0 6px 20px rgba(0,0,0,.35)}
+header h1{margin:0 0 4px;font-size:2.1rem;font-weight:700}
 header p{font-size:.95rem;opacity:.95;margin:0}
 nav{display:flex;justify-content:center;gap:10px;padding:14px;background:rgba(91,33,182,.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:40;flex-wrap:wrap}
 nav a{color:#fff;text-decoration:none;font-weight:bold;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.95rem;position:relative}
@@ -817,6 +817,14 @@ async function loadListings(){
 }
 async function saveListings(){ try{ await window.storage.set(LISTINGS_KEY, JSON.stringify(listings), true); }catch(e){ showToast("Erreur d'enregistrement"); } }
 async function loadMessages(){
+  if(LISTINGS_API_BASE){
+    try{
+      const res = await fetch(LISTINGS_API_BASE+'/api/messages');
+      if(res.ok){ messages = await res.json(); return; }
+    }catch(e){}
+    messages = {};
+    return;
+  }
   try{ const res = await window.storage.get(MESSAGES_KEY, true); messages = res && res.value ? JSON.parse(res.value) : {}; }
   catch(e){ messages = {}; }
 }
@@ -925,12 +933,12 @@ function cleanupCart(){ const before=cart.length; cart = cart.filter(id => listi
 function cleanupFavorites(){ const before=favorites.length; favorites = favorites.filter(id => listings.some(l=>l.id===id)); if(favorites.length!==before) saveFavorites(); }
 
 /* ---------- NAVIGATION ---------- */
-function showPage(page){
+async function showPage(page){
   document.querySelectorAll('.page').forEach(p=>p.style.display='none');
   document.getElementById('page-'+page).style.display='block';
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active', a.dataset.page===page));
   if(page==='annonces') renderAnnonces();
-  if(page==='messages') renderMessagesPage();
+  if(page==='messages'){ await loadMessages(); renderMessagesPage(); }
   if(page==='favoris') renderFavPage();
   if(page==='soldes') renderSoldesPage();
   if(page==='panier') renderCartPage();
@@ -1639,9 +1647,21 @@ async function sendMessage(id, from){
   from = from || 'visiteur';
   const input = document.getElementById('thread-input-'+id) || document.getElementById('admin-thread-input-'+id);
   const text = input.value.trim(); if(!text) return;
-  if(!messages[id]) messages[id]=[];
-  messages[id].push({from, text, ts:Date.now()});
-  await saveMessages();
+  if(LISTINGS_API_BASE){
+    try{
+      const res = await fetch(LISTINGS_API_BASE+'/api/messages/'+id, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({from, text})
+      });
+      if(!res.ok) throw new Error('Echec envoi');
+    }catch(e){ showToast("Impossible d'envoyer le message, vérifiez votre connexion"); return; }
+    await loadMessages();
+  } else {
+    if(!messages[id]) messages[id]=[];
+    messages[id].push({from, text, ts:Date.now()});
+    await saveMessages();
+  }
   input.value='';
   if(document.getElementById('page-messages').style.display==='block') renderMessagesPage();
   if(adminUnlocked) renderAdminMessages();
@@ -1700,7 +1720,7 @@ function checkAdminPin(){
   if(v===ADMIN_PIN){ adminUnlocked=true; document.getElementById('admin-pin-gate').style.display='none'; document.getElementById('admin-content').style.display='block'; renderAdminAds(); }
   else{ showToast("Code incorrect"); document.getElementById('admin-pin-input').value=''; }
 }
-function setAdminTab(tab){
+async function setAdminTab(tab){
   adminTab = tab;
   document.getElementById('tab-btn-ads').classList.toggle('active', tab==='ads');
   document.getElementById('tab-btn-msgs').classList.toggle('active', tab==='msgs');
@@ -1714,7 +1734,7 @@ function setAdminTab(tab){
   document.getElementById('admin-tab-sellers').style.display = tab==='sellers' ? 'block':'none';
   document.getElementById('admin-tab-stats').style.display = tab==='stats' ? 'block':'none';
   document.getElementById('admin-tab-dac7').style.display = tab==='dac7' ? 'block':'none';
-  if(tab==='msgs') renderAdminMessages();
+  if(tab==='msgs'){ await loadMessages(); renderAdminMessages(); }
   if(tab==='revenue') updateAdminRevenue();
   if(tab==='sellers') renderAdminSellers();
   if(tab==='stats') renderAdminStats();
