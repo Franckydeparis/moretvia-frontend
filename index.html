@@ -49,6 +49,7 @@ main{max-width:1200px;margin:auto;padding:34px 20px 60px}
 .iconbtn{background:#6d28d9;border:none;color:#fff;padding:7px 10px;border-radius:9px;font-size:.8rem;cursor:pointer}
 .iconbtn:hover{background:#7c3aed}
 .iconbtn.fav.active{background:#f43f5e}
+.stats-period-btn.active{background:#f43f5e}
 .btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:12px 20px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:.95rem;box-shadow:0 10px 20px rgba(0,0,0,.25)}
 .btn:hover{opacity:.9}
 .btn.outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}
@@ -110,14 +111,18 @@ footer hr{margin:26px 0;border-color:rgba(255,255,255,.2)}
 .tabbar button{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;background:rgba(255,255,255,.1);color:#fff;font-weight:bold}
 .tabbar button.active{background:#fff;color:#5b21b6}
 .small{font-size:.78rem;opacity:.75;line-height:1.5}
+.nav-toggle-bar{display:none}
 @media (max-width:680px){
   #modal-ad-grid{grid-template-columns:1fr !important}
   header h1{font-size:1.5rem}
   .header-logo{width:34px;height:34px}
   .header-inner{gap:12px}
   .hero h2{font-size:1.7rem}
-  nav{gap:4px}
-  nav a{padding:7px 10px;font-size:.85rem}
+  .nav-toggle-bar{display:flex;justify-content:center;background:rgba(91,33,182,.9);padding:10px;position:sticky;top:0;z-index:41}
+  .nav-toggle{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;max-width:420px}
+  nav#nav{display:none;flex-direction:column;align-items:stretch;gap:2px;position:sticky;top:46px}
+  nav#nav.nav-open{display:flex}
+  nav#nav a{width:100%;text-align:center;box-sizing:border-box;padding:12px 10px;font-size:.95rem}
 }
 
 html{scroll-behavior:smooth}
@@ -146,6 +151,7 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
 .stat{background:rgba(255,255,255,.09);padding:18px;border-radius:18px;text-align:center;border:1px solid rgba(255,255,255,.14)}
 .stat b{display:block;font-size:1.6rem}
 .trust-badge{display:inline-flex;align-items:center;gap:5px;background:#ffffff;font-weight:900;font-size:.72rem;padding:6px 16px;border-radius:999px;vertical-align:middle;white-space:nowrap;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+.trust-badge.new-seller{background:#ede9fe;color:#5b21b6}
 .trust-badge.lg{font-size:1rem;padding:10px 22px;gap:7px}
 .seller-chip{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;font-weight:bold;border:none;padding:6px 14px;border-radius:999px;cursor:pointer;font-size:.95rem}
 .seller-chip:hover{opacity:.85}
@@ -199,6 +205,9 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
   </div>
 </header>
 
+<div class="nav-toggle-bar">
+  <button type="button" class="nav-toggle" id="nav-toggle" onclick="toggleMobileNav()" aria-label="Menu" aria-expanded="false" aria-controls="nav">&#9776; Menu</button>
+</div>
 <nav id="nav">
   <a onclick="showPage('accueil')" data-page="accueil">Accueil</a>
   <a onclick="showPage('annonces')" data-page="annonces">Explorer</a>
@@ -261,6 +270,14 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
         <label>Prix (€) *</label>
         <input id="prix" type="number" min="0" step="1" placeholder="350" required>
         <p class="small" style="margin-top:4px">Votre première vente sur Moretvia.fr est offerte (0% de commission). À partir de la deuxième vente, une commission de 10% s'applique.</p>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin-top:14px">
+          <input type="checkbox" id="pub-solde-toggle" style="width:auto" onchange="togglePubSoldeField()"> 🏷️ Article à solder
+        </label>
+        <div id="pub-solde-box" style="display:none;margin-top:8px">
+          <label>Prix soldé (€)</label>
+          <input id="pub-solde-prix" type="number" min="0" step="1" placeholder="Doit être inférieur au prix normal">
+          <p class="small" style="margin-top:4px">Le solde apparaîtra dans l'onglet 🏷️ Soldes du site pendant 10 jours.</p>
+        </div>
         <label>Catégorie *</label>
         <select id="categorie" required>
           <option value="" disabled selected>Choisir une catégorie</option>
@@ -278,6 +295,9 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
         <div class="upload-zone" onclick="document.getElementById('photos').click()">Choisir des photos</div>
         <input type="file" id="photos" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)">
         <div id="preview"></div>
+        <label style="margin-top:18px">Modes de livraison proposés</label>
+        <p class="small" style="margin:2px 0 8px">Cochez les options que vous acceptez. Indiquez un prix pour les modes payants (frais à votre charge ou à ajouter, à vous de voir avec l'acheteur).</p>
+        <div id="pub-livraison-options" style="display:flex;flex-direction:column;gap:8px"></div>
         <hr style="border-color:rgba(255,255,255,.2);margin:22px 0">
         <label>Vos coordonnées (visibles par les acheteurs intéressés)</label>
         <input id="nom" name="nom" autocomplete="name" placeholder="Nom et prénom *" required style="margin-bottom:8px">
@@ -322,7 +342,7 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
     <h3 style="margin-top:0">Panier</h3>
     <div id="cart-content"></div>
     <div id="cart-total" style="margin-top:20px;font-size:1.3rem;font-weight:900;display:none"></div>
-    <button class="btn" id="pay-btn" style="margin-top:16px;display:none" onclick="simulatePayment()">Payer maintenant</button>
+    <button class="btn" id="pay-btn" style="margin-top:16px;display:none" onclick="simulatePayment()">Valider la commande (paiement test, aucun débit réel)</button>
   </section>
 
   <!-- A PROPOS -->
@@ -363,6 +383,7 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
         <p class="small"><span id="ad-ville"></span> · <span id="ad-nom"></span></p>
         <p class="small" id="ad-tel-row"><span id="ad-tel"></span></p>
         <p style="margin-top:16px;line-height:1.6" id="ad-desc"></p>
+        <div id="ad-livraison" style="margin-top:14px"></div>
         <p id="ad-sold-banner" style="display:none;margin-top:16px;background:#1e0a45;color:#fff;font-weight:900;padding:10px 14px;border-radius:10px;text-align:center">Cette annonce a été vendue</p>
         <div class="row" style="margin-top:20px" id="ad-actions">
           <button class="btn" id="ad-addcart-btn" onclick="addCartCurrent()">Ajouter au panier</button>
@@ -536,8 +557,18 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
             <div class="stat"><b id="stats-evolution">—</b>Évolution CA (vs mois préc.)</div>
           </div>
           <div class="section" style="margin-top:24px">
-            <h3 style="font-size:1.2rem">Chiffre d'affaires par mois</h3>
-            <div id="stats-mois"></div>
+            <h3 style="font-size:1.2rem">Évolution des ventes</h3>
+            <div id="stats-period-buttons" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+              <button class="iconbtn stats-period-btn" data-period="mois" onclick="setStatsPeriod('mois')">Mois en cours (jour/jour)</button>
+              <button class="iconbtn stats-period-btn" data-period="6" onclick="setStatsPeriod('6')">6 mois</button>
+              <button class="iconbtn stats-period-btn" data-period="12" onclick="setStatsPeriod('12')">1 an</button>
+              <button class="iconbtn stats-period-btn" data-period="24" onclick="setStatsPeriod('24')">2 ans</button>
+              <button class="iconbtn stats-period-btn" data-period="36" onclick="setStatsPeriod('36')">3 ans</button>
+              <button class="iconbtn stats-period-btn" data-period="48" onclick="setStatsPeriod('48')">4 ans</button>
+              <button class="iconbtn stats-period-btn" data-period="60" onclick="setStatsPeriod('60')">5 ans</button>
+            </div>
+            <div id="stats-chart" style="background:rgba(255,255,255,.06);border-radius:14px;padding:14px;overflow-x:auto"></div>
+            <div id="stats-mois" style="margin-top:14px"></div>
           </div>
           <div class="section" style="margin-top:24px">
             <h3 style="font-size:1.2rem">Top catégories</h3>
@@ -551,12 +582,18 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
             <h3 style="font-size:1.2rem">Top vendeurs</h3>
             <div id="stats-vendeurs"></div>
           </div>
+          <button class="btn outline" style="margin-top:24px" onclick="exportStatsCsv()">Exporter en CSV (comptabilité)</button>
         </div>
       </div>
       <div id="admin-tab-dac7" style="display:none">
         <p style="opacity:.85;font-size:.9rem;max-width:700px">Suivi informatif des seuils DAC7 (obligation de signalement des plateformes à l'administration fiscale) : au-delà de <b>30 ventes</b> ou <b>2 000 €</b> de chiffre d'affaires cumulé sur l'année pour un même vendeur, la plateforme doit transmettre ses informations aux impôts. Ceci n'est pas un avis juridique ou fiscal — vérifiez votre situation précise avec un comptable.</p>
         <p id="dac7-loading" class="empty">Chargement…</p>
         <div id="dac7-content"></div>
+        <div class="section" style="margin-top:28px">
+          <h3 style="font-size:1.2rem">Franchise en base de TVA (revenu Moretvia)</h3>
+          <p style="opacity:.85;font-size:.9rem;max-width:700px">Ce seuil concerne le revenu de commission de Moretvia (10% des ventes), pas le chiffre d'affaires des vendeurs. Seuils 2026 pour une activité de prestation de services : <b>37 500 €</b> (seuil normal) et <b>41 250 €</b> (seuil majoré) de commission cumulée sur l'année.</p>
+          <div id="tva-content" style="margin-top:14px"><p class="empty">Chargement…</p></div>
+        </div>
       </div>
     </div>
   </div>
@@ -605,6 +642,20 @@ if(typeof window.storage === 'undefined'){
 const ADMIN_PIN = "6464";
 const LISTINGS_KEY = "moretvia-v1-listings";
 const MESSAGES_KEY = "moretvia-v1-messages";
+const THREAD_TITLES_KEY = "moretvia-v1-thread-titles";
+let threadTitles = {};
+async function loadThreadTitles(){
+  try{ const res = await window.storage.get(THREAD_TITLES_KEY, true); threadTitles = res && res.value ? JSON.parse(res.value) : {}; }
+  catch(e){ threadTitles = {}; }
+}
+async function saveThreadTitles(){ try{ await window.storage.set(THREAD_TITLES_KEY, JSON.stringify(threadTitles), true); }catch(e){} }
+function threadTitleFor(id, listing){
+  if(listing && listing.titre){
+    if(threadTitles[id] !== listing.titre){ threadTitles[id] = listing.titre; saveThreadTitles(); }
+    return listing.titre;
+  }
+  return threadTitles[id] || ('Annonce supprimée (#'+id+')');
+}
 const CART_KEY = "moretvia-v1-cart";
 const FAVORITES_KEY = "moretvia-v1-favorites";
 const TRANSACTIONS_KEY = "moretvia-v1-transactions";
@@ -635,7 +686,8 @@ function backendToFrontend(l){
     ts: l.dateCreation ? new Date(l.dateCreation).getTime() : Date.now(),
     vendu: !!l.vendu,
     soldePrix: l.soldePrix || undefined,
-    soldeExpire: l.soldeExpire || undefined
+    soldeExpire: l.soldeExpire || undefined,
+    livraison: Array.isArray(l.livraison) ? l.livraison : []
   };
 }
 function frontendToBackend(l){
@@ -652,9 +704,16 @@ function frontendToBackend(l){
     telephone: l.telephone || '',
     vendu: !!l.vendu,
     soldePrix: l.soldePrix || null,
-    soldeExpire: l.soldeExpire || null
+    soldeExpire: l.soldeExpire || null,
+    livraison: Array.isArray(l.livraison) ? l.livraison : []
   };
 }
+const LIVRAISON_MODES = {
+  'main-propre': { label: 'Remise en main propre', payant: false },
+  'colissimo': { label: 'Colissimo (La Poste)', payant: true },
+  'chronopost': { label: 'Chronopost', payant: true },
+  'relais': { label: 'Point relais (Mondial Relay)', payant: true }
+};
 const CATEGORIES = ["Téléphonie","Informatique","Image & Son","Maison & Jardin","Mode","Véhicules","Sports & Loisirs","Enfants & Bébé","Animaux","Emploi","Immobilier","Autres"];
 const CATEGORIES_SHORT = {"Téléphonie":"TE","Informatique":"IN","Image & Son":"IS","Maison & Jardin":"MJ","Mode":"MO","Véhicules":"VE","Sports & Loisirs":"SL","Enfants & Bébé":"EB","Animaux":"AN","Emploi":"EM","Immobilier":"IM","Autres":"AU"};
 
@@ -687,6 +746,38 @@ const VILLE_SUGGESTIONS = [
 function initFormSuggestions(){
   document.getElementById('titre-suggestions').innerHTML = TITRE_SUGGESTIONS.map(t=>`<option value="${t}">`).join('');
   document.getElementById('ville-suggestions').innerHTML = VILLE_SUGGESTIONS.map(v=>`<option value="${v}">`).join('');
+}
+function initLivraisonOptions(){
+  const el = document.getElementById('pub-livraison-options');
+  if(!el) return;
+  el.innerHTML = Object.entries(LIVRAISON_MODES).map(([key,m])=>`
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin:0;min-width:220px">
+        <input type="checkbox" class="pub-livraison-check" data-mode="${key}" style="width:auto" onchange="document.getElementById('pub-livraison-prix-${key}').style.display=this.checked&&${m.payant}?'inline-block':'none'"> ${m.label}
+      </label>
+      ${m.payant ? `<input type="number" min="0" step="0.5" id="pub-livraison-prix-${key}" placeholder="Prix (€)" style="display:none;max-width:120px;padding:6px 8px;font-size:.85rem">` : ''}
+    </div>
+  `).join('');
+}
+function collectPubLivraison(){
+  const result = [];
+  document.querySelectorAll('.pub-livraison-check').forEach(cb=>{
+    if(!cb.checked) return;
+    const key = cb.dataset.mode;
+    const mode = LIVRAISON_MODES[key];
+    let prix = 0;
+    if(mode.payant){
+      const input = document.getElementById('pub-livraison-prix-'+key);
+      prix = parseFloat(input.value);
+      if(isNaN(prix) || prix<0) prix = 0;
+    }
+    result.push({mode:key, prix});
+  });
+  return result;
+}
+function resetPubLivraison(){
+  document.querySelectorAll('.pub-livraison-check').forEach(cb=>{ cb.checked=false; });
+  document.querySelectorAll('[id^="pub-livraison-prix-"]').forEach(inp=>{ inp.value=''; inp.style.display='none'; });
 }
 
 let listings = [];
@@ -970,12 +1061,25 @@ function openAd(id){
   const telRow = document.getElementById('ad-tel-row');
   if(l.telephone){ telRow.style.display='block'; document.getElementById('ad-tel').textContent = l.telephone; } else { telRow.style.display='none'; }
   document.getElementById('ad-desc').textContent = l.desc||'';
+  renderAdLivraison(l);
   const sold = !!l.vendu;
   document.getElementById('ad-sold-banner').style.display = sold ? 'block' : 'none';
   document.getElementById('ad-addcart-btn').style.display = sold ? 'none' : 'inline-block';
   document.getElementById('ad-contact-btn').style.display = sold ? 'none' : 'inline-block';
   document.getElementById('ad-fav-btn').classList.toggle('active', favorites.includes(id));
   openModal('modal-ad');
+}
+function renderAdLivraison(l){
+  const el = document.getElementById('ad-livraison');
+  const livraison = l.livraison || [];
+  if(!livraison.length){ el.innerHTML = ''; return; }
+  el.innerHTML = `<p class="small" style="font-weight:bold;margin-bottom:4px">Modes de livraison proposés</p>` +
+    livraison.map(item=>{
+      const mode = LIVRAISON_MODES[item.mode];
+      if(!mode) return '';
+      const prixTxt = mode.payant ? (item.prix>0 ? fmtPrice(item.prix) : 'Gratuit') : 'Gratuit';
+      return `<div class="small" style="display:flex;justify-content:space-between;max-width:280px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.12)"><span>${mode.label}</span><span style="font-weight:bold">${prixTxt}</span></div>`;
+    }).join('');
 }
 function addCartCurrent(){
   if(!currentAdId) return;
@@ -1214,14 +1318,29 @@ async function saveEditedPhotos(){
   renderAnnonces();
   showToast("Annonce mise à jour");
 }
+function renderPhotoPreview(){
+  const preview = document.getElementById('preview');
+  preview.innerHTML = uploadedImages.map((dataUrl,i)=>
+    `<div class="edit-photo-thumb"><img src="${dataUrl}"><button type="button" class="rm" onclick="removeUploadedImage(${i})">×</button></div>`
+  ).join('');
+}
+function removeUploadedImage(i){
+  uploadedImages.splice(i,1);
+  renderPhotoPreview();
+}
 function handlePhotos(e){
-  if(e.target.files.length > 4) showToast("Seules les 4 premières photos seront utilisées");
-  const files = [...e.target.files].slice(0,4);
-  const preview = document.getElementById('preview'); preview.innerHTML='';
+  // On ajoute les nouvelles photos à celles déjà sélectionnées (au lieu de les
+  // remplacer), pour permettre de choisir ses 4 photos une par une sans
+  // perdre les précédentes à chaque nouvelle sélection.
+  const remainingSlots = 4 - uploadedImages.length;
+  if(remainingSlots <= 0){ showToast("4 photos maximum : retirez-en une pour en ajouter une autre"); e.target.value=''; return; }
+  const incoming = [...e.target.files];
+  const files = incoming.slice(0, remainingSlots);
+  if(incoming.length > remainingSlots) showToast("4 photos maximum : "+files.length+" photo(s) supplémentaire(s) ajoutée(s)");
+  if(!files.length) return;
   const submitBtn = document.getElementById('publish-submit-btn');
-  if(!files.length){ uploadedImages = []; return; }
   if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Traitement des photos...'; }
-  photosProcessing = Promise.all(files.map(file => new Promise(resolve => {
+  const processing = Promise.all(files.map(file => new Promise(resolve => {
     const reader = new FileReader();
     reader.onload = ev => {
       const img = new Image();
@@ -1234,11 +1353,17 @@ function handlePhotos(e){
       img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
-  }))).then(images=>{
-    uploadedImages = images;
-    images.forEach(dataUrl=>{ const p = document.createElement('img'); p.src = dataUrl; preview.appendChild(p); });
+  })));
+  photosProcessing = processing.then(newImages=>{
+    uploadedImages = uploadedImages.concat(newImages).slice(0,4);
+    renderPhotoPreview();
     if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = "Publier l'annonce"; }
+    e.target.value = '';
   });
+}
+function togglePubSoldeField(){
+  const checked = document.getElementById('pub-solde-toggle').checked;
+  document.getElementById('pub-solde-box').style.display = checked ? 'block' : 'none';
 }
 async function publishAd(e){
   e.preventDefault();
@@ -1254,7 +1379,18 @@ async function publishAd(e){
   if(!titre||!prix||!categorie||!ville||!nom||!email){ showToast("Merci de remplir tous les champs obligatoires (*), y compris la catégorie"); return; }
   if(isNaN(prix) || prix<=0){ showToast("Merci d'indiquer un prix valide"); return; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast("Merci d'indiquer une adresse e-mail valide"); return; }
-  const draft = {titre, prix, categorie, ville, nom, email, telephone, desc, images: uploadedImages.length?uploadedImages:[], ts:Date.now(), vendu:false};
+
+  let soldePrix = null, soldeExpire = null;
+  const soldeToggle = document.getElementById('pub-solde-toggle');
+  if(soldeToggle && soldeToggle.checked){
+    const prixSoldeInput = parseFloat(document.getElementById('pub-solde-prix').value);
+    if(isNaN(prixSoldeInput) || prixSoldeInput<=0 || prixSoldeInput>=prix){ showToast("Merci d'indiquer un prix soldé valide (positif et inférieur au prix normal "+fmtPrice(prix)+")"); return; }
+    soldePrix = Math.round(prixSoldeInput*100)/100;
+    soldeExpire = Date.now() + 10*24*60*60*1000;
+  }
+
+  const livraison = collectPubLivraison();
+  const draft = {titre, prix, categorie, ville, nom, email, telephone, desc, images: uploadedImages.length?uploadedImages:[], ts:Date.now(), vendu:false, soldePrix, soldeExpire, livraison};
   if(LISTINGS_API_BASE){
     try{
       const res = await fetch(LISTINGS_API_BASE+'/api/listings', {
@@ -1276,6 +1412,8 @@ async function publishAd(e){
   }
   e.target.reset();
   document.getElementById('preview').innerHTML=''; uploadedImages=[];
+  document.getElementById('pub-solde-box').style.display='none';
+  resetPubLivraison();
   showToast("Annonce publiée.");
   updateStats();
   showPage('annonces');
@@ -1351,15 +1489,15 @@ async function simulatePayment(){
   const freeNote = freeCount ? `<p class="small" style="margin-top:6px;color:#e9d8ff">${freeCount} article(s) ont bénéficié de la commission offerte pour une première vente vendeur.</p>` : '';
   const el = document.getElementById('cart-content');
   el.innerHTML = `<div class="empty" style="color:#fff;opacity:1">
-    <div style="font-size:1.4rem;font-weight:900;margin-bottom:8px">Commande confirmée</div>
-    <p>Paiement simulé de ${fmtPrice(total)} effectué avec succès.</p>
-    <p class="small" style="margin-top:10px">Dont commission Moretvia.fr : ${fmtPrice(commission)} · Reversé au(x) vendeur(s) : ${fmtPrice(sellerPayout)}</p>
+    <div style="font-size:1.4rem;font-weight:900;margin-bottom:8px">Commande enregistrée (mode test)</div>
+    <p>Aucun paiement réel n'a été prélevé : le système de paiement en ligne est encore en cours de mise en place sur Moretvia.fr. Montant test : ${fmtPrice(total)}.</p>
+    <p class="small" style="margin-top:10px">Simulation — commission Moretvia.fr : ${fmtPrice(commission)} · Reversé au(x) vendeur(s) : ${fmtPrice(sellerPayout)}</p>
     ${freeNote}
-    <p style="margin-top:10px">Le(s) vendeur(s) va(vont) être notifié(s) et vous contacter pour la remise du bien.</p>
+    <p style="margin-top:10px">Le(s) vendeur(s) va(vont) être notifié(s) et vous contacter pour convenir de la remise du bien et du paiement réel.</p>
   </div>`;
   document.getElementById('cart-total').style.display='none';
   document.getElementById('pay-btn').style.display='none';
-  showToast("Paiement simulé réussi.");
+  showToast("Commande test enregistrée — aucun paiement réel effectué.");
 }
 
 /* ---------- CONFIANCE / AVIS ---------- */
@@ -1414,6 +1552,9 @@ function badgeStarsHtml(rating, big){
 function trustBadgeHtml(email, big){
   const t = computeTrust(email);
   const title = t.hasRating ? `${t.label} · ${t.reviewCount} avis` : "Ce vendeur n'a pas encore reçu d'avis d'acheteur";
+  if(!t.hasRating){
+    return `<span class="trust-badge new-seller${big?' lg':''}" title="${title}">Nouveau vendeur</span>`;
+  }
   return `<span class="trust-badge${big?' lg':''}" title="${title}">${badgeStarsHtml(t.avgRating, big)}</span>`;
 }
 function starsHtml(rating){
@@ -1484,7 +1625,7 @@ function renderMessagesPage(){
     const l = listings.find(x=>x.id===id);
     const thread = messages[id] || [];
     return `<div class="thread">
-      <h4>${escapeHtml(l ? l.titre : 'Annonce #'+id)}</h4>
+      <h4>${escapeHtml(threadTitleFor(id, l))}</h4>
       <div class="msgs-box" id="thread-msgs-${id}">${thread.map(m=>`<div class="msg ${m.from}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message. Envoyez le premier !</p>'}</div>
       <div class="msg-input">
         <input id="thread-input-${id}" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter')sendMessage(${id})">
@@ -1577,7 +1718,7 @@ function setAdminTab(tab){
   if(tab==='revenue') updateAdminRevenue();
   if(tab==='sellers') renderAdminSellers();
   if(tab==='stats') renderAdminStats();
-  if(tab==='dac7') renderAdminDac7();
+  if(tab==='dac7'){ renderAdminDac7(); renderAdminTva(); }
 }
 function fmtPct(p){
   if(p===null || p===undefined || !isFinite(p)) return '—';
@@ -1592,6 +1733,67 @@ async function fetchJsonSafe(url){
     return await res.json();
   }catch(e){ return null; }
 }
+let lastStatsData = null;
+let currentStatsPeriod = 'mois';
+function buildLineChartSvg(labels, values){
+  const w = Math.max(600, labels.length*36);
+  const h = 240;
+  const padding = {top:20,right:20,bottom:36,left:64};
+  const innerW = w - padding.left - padding.right;
+  const innerH = h - padding.top - padding.bottom;
+  const maxVal = Math.max(1, ...values);
+  const stepX = labels.length>1 ? innerW/(labels.length-1) : 0;
+  const points = values.map((v,i)=>{
+    const x = padding.left + i*stepX;
+    const y = padding.top + innerH - (v/maxVal)*innerH;
+    return [x,y];
+  });
+  const pathD = points.map((p,i)=> (i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const areaD = points.length ? pathD + ` L${points[points.length-1][0].toFixed(1)},${padding.top+innerH} L${points[0][0].toFixed(1)},${padding.top+innerH} Z` : '';
+  let gridSvg = '';
+  const ySteps = 4;
+  for(let i=0;i<=ySteps;i++){
+    const val = maxVal * i/ySteps;
+    const y = padding.top + innerH - (val/maxVal)*innerH;
+    gridSvg += `<line x1="${padding.left}" y1="${y.toFixed(1)}" x2="${w-padding.right}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.12)" stroke-width="1"/>`;
+    gridSvg += `<text x="${padding.left-8}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="11" fill="rgba(255,255,255,.75)">${Math.round(val).toLocaleString('fr-FR')}</text>`;
+  }
+  const labelEvery = Math.max(1, Math.ceil(labels.length/14));
+  let xLabelsSvg='';
+  labels.forEach((lab,i)=>{
+    if(i%labelEvery!==0 && i!==labels.length-1) return;
+    const x = padding.left + i*stepX;
+    xLabelsSvg += `<text x="${x.toFixed(1)}" y="${h-12}" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.75)">${escapeHtml(String(lab))}</text>`;
+  });
+  const dotsSvg = points.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="#fff"/>`).join('');
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="display:block">
+    ${gridSvg}
+    <path d="${areaD}" fill="rgba(124,58,237,.35)" stroke="none"/>
+    <path d="${pathD}" fill="none" stroke="#fff" stroke-width="2.5"/>
+    ${dotsSvg}
+    ${xLabelsSvg}
+  </svg>`;
+}
+function setStatsPeriod(period){
+  currentStatsPeriod = period;
+  document.querySelectorAll('.stats-period-btn').forEach(b=> b.classList.toggle('active', b.dataset.period===period));
+  renderStatsChart();
+}
+function renderStatsChart(){
+  const el = document.getElementById('stats-chart');
+  if(!lastStatsData){ el.innerHTML=''; return; }
+  let labels, values;
+  if(currentStatsPeriod==='mois'){
+    labels = lastStatsData.parJour.map(j=> j.jour.slice(8,10));
+    values = lastStatsData.parJour.map(j=> j.ca);
+  } else {
+    const n = parseInt(currentStatsPeriod,10);
+    const slice = lastStatsData.parMois.slice(-n);
+    labels = slice.map(m=> m.mois);
+    values = slice.map(m=> m.ca);
+  }
+  el.innerHTML = buildLineChartSvg(labels, values);
+}
 async function renderAdminStats(){
   const loadingEl = document.getElementById('stats-loading');
   const contentEl = document.getElementById('stats-content');
@@ -1600,13 +1802,17 @@ async function renderAdminStats(){
   loadingEl.style.display='none';
   if(!data){ loadingEl.style.display='block'; loadingEl.textContent = "Impossible de charger les statistiques (backend indisponible)."; return; }
   contentEl.style.display='block';
+  lastStatsData = data;
   document.getElementById('stats-ca').textContent = fmtPrice(data.totalCA);
   document.getElementById('stats-ventes').textContent = data.totalVentes;
   document.getElementById('stats-panier').textContent = fmtPrice(Math.round(data.panierMoyen));
   document.getElementById('stats-evolution').textContent = fmtPct(data.evolutionCA);
+  document.querySelectorAll('.stats-period-btn').forEach(b=> b.classList.toggle('active', b.dataset.period===currentStatsPeriod));
+  renderStatsChart();
 
   const moisEl = document.getElementById('stats-mois');
-  moisEl.innerHTML = data.parMois.length ? data.parMois.slice().reverse().map(m=>
+  const moisAvecVentes = data.parMois.filter(m=>m.ventes>0);
+  moisEl.innerHTML = moisAvecVentes.length ? moisAvecVentes.slice().reverse().map(m=>
     `<div class="admin-item"><div class="info"><div class="t">${m.mois}</div><div class="small">${m.ventes} vente(s) · ${fmtPrice(m.ca)}</div></div></div>`
   ).join('') : '<p class="empty">Aucune vente pour le moment.</p>';
 
@@ -1636,8 +1842,71 @@ async function renderAdminDac7(){
   const statutLabel = {ok:'OK', attention:'À surveiller', depasse:'Seuil dépassé'};
   const statutColor = {ok:'#22c55e', attention:'#f59e0b', depasse:'#f43f5e'};
   contentEl.innerHTML = data.vendeurs.map(v=>{
-    return `<div class="admin-item"><div class="info"><div class="t">${escapeHtml(v.nom||v.email||'Vendeur inconnu')}</div><div class="small">${v.transactions} transaction(s) · ${fmtPrice(v.ca)} en ${data.annee}</div></div><span style="background:${statutColor[v.statut]};color:#fff;font-weight:bold;font-size:.75rem;padding:5px 10px;border-radius:8px;white-space:nowrap">${statutLabel[v.statut]}</span></div>`;
+    const key = (v.email||v.nom||'inconnu').toLowerCase().trim();
+    const idSafe = key.replace(/[^a-z0-9]/g,'_');
+    const ann = v.annotation || {note:'', siret:'', verifie:false};
+    return `<div class="admin-item" style="align-items:flex-start;flex-wrap:wrap">
+      <div class="info" style="min-width:220px">
+        <div class="t">${escapeHtml(v.nom||v.email||'Vendeur inconnu')}</div>
+        <div class="small">${v.transactions} transaction(s) · ${fmtPrice(v.ca)} en ${data.annee}</div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <input type="text" id="dac7-note-${idSafe}" placeholder="Annotation (remarques, vérifications...)" value="${escapeHtml(ann.note)}" style="flex:1;min-width:180px;padding:6px 8px;font-size:.82rem">
+          <input type="text" id="dac7-siret-${idSafe}" placeholder="SIRET (si pro)" value="${escapeHtml(ann.siret)}" style="max-width:150px;padding:6px 8px;font-size:.82rem">
+          <label style="display:flex;align-items:center;gap:5px;font-size:.8rem;font-weight:normal;margin:0">
+            <input type="checkbox" id="dac7-verifie-${idSafe}" style="width:auto" ${ann.verifie?'checked':''}> Identité vérifiée
+          </label>
+          <button class="iconbtn" onclick="saveSellerNote('${key.replace(/'/g,"\\'")}','${idSafe}')">Enregistrer</button>
+        </div>
+      </div>
+      <span style="background:${statutColor[v.statut]};color:#fff;font-weight:bold;font-size:.75rem;padding:5px 10px;border-radius:8px;white-space:nowrap">${statutLabel[v.statut]}</span>
+    </div>`;
   }).join('');
+}
+async function saveSellerNote(email, idSafe){
+  const note = document.getElementById('dac7-note-'+idSafe).value.trim();
+  const siret = document.getElementById('dac7-siret-'+idSafe).value.trim();
+  const verifie = document.getElementById('dac7-verifie-'+idSafe).checked;
+  if(!LISTINGS_API_BASE){ showToast("Backend indisponible"); return; }
+  try{
+    const res = await fetch(LISTINGS_API_BASE+'/api/seller-notes/'+encodeURIComponent(email), {
+      method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({note, siret, verifie})
+    });
+    if(!res.ok) throw new Error('fail');
+    showToast("Annotation enregistrée");
+  }catch(e){ showToast("Erreur lors de l'enregistrement de l'annotation"); }
+}
+async function renderAdminTva(){
+  const el = document.getElementById('tva-content');
+  const data = await fetchJsonSafe('/api/stats/tva');
+  if(!data){ el.innerHTML = '<p class="empty">Impossible de charger le suivi TVA (backend indisponible).</p>'; return; }
+  const statutLabel = {ok:'OK', attention:'À surveiller', depasse:'Seuil dépassé'};
+  const statutColor = {ok:'#22c55e', attention:'#f59e0b', depasse:'#f43f5e'};
+  el.innerHTML = `
+    <div class="statbar" style="margin-bottom:10px">
+      <div class="stat"><b>${fmtPrice(data.commissionEstimee)}</b>Commission estimée ${data.annee}</div>
+      <div class="stat"><b>${fmtPrice(data.seuils.normal)}</b>Seuil normal</div>
+      <div class="stat"><b>${fmtPrice(data.seuils.majore)}</b>Seuil majoré</div>
+    </div>
+    <div class="admin-item"><div class="info"><div class="t">Statut</div><div class="small">${escapeHtml(data.note)}</div></div><span style="background:${statutColor[data.statut]};color:#fff;font-weight:bold;font-size:.75rem;padding:5px 10px;border-radius:8px;white-space:nowrap">${statutLabel[data.statut]}</span></div>
+  `;
+}
+function exportStatsCsv(){
+  if(!listings.length){ showToast("Aucune annonce à exporter"); return; }
+  const ventes = listings.filter(l=>l.vendu);
+  if(!ventes.length){ showToast("Aucune vente à exporter pour le moment"); return; }
+  const header = ['Date','Titre','Categorie','Ville','Vendeur','Email','Prix','Prix soldé','Montant retenu','Commission (10%)'];
+  const rows = ventes.map(l=>{
+    const montant = (l.soldePrix!==undefined && l.soldePrix!==null) ? l.soldePrix : l.prix;
+    const date = new Date(l.ts||Date.now()).toLocaleDateString('fr-FR');
+    return [date, l.titre, l.categorie||'', l.ville||'', l.nom||'', l.email||'', l.prix, l.soldePrix||'', montant, Math.round(montant*0.10*100)/100];
+  });
+  const csv = [header, ...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'moretvia-ventes-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
 }
 function updateAdminRevenue(){
   const revTotalEl = document.getElementById('rev-total');
@@ -1780,7 +2049,7 @@ function renderAdminMessages(){
     return `<div class="thread">
       <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin-bottom:8px">
         <input type="checkbox" style="width:auto" ${selectedMsgIds.includes(id)?'checked':''} onchange="toggleMsgSelected(${id}, this.checked)">
-        <h4 style="margin:0;border-bottom:none;padding-bottom:0">${escapeHtml(l ? l.titre : 'Annonce #'+id)}</h4>
+        <h4 style="margin:0;border-bottom:none;padding-bottom:0">${escapeHtml(threadTitleFor(id, l))}</h4>
       </label>
       <div class="msgs-box">${thread.map(m=>`<div class="msg ${m.from==='vendeur'?'vendeur':'visiteur'}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message.</p>'}</div>
       <div class="msg-input">
@@ -1824,11 +2093,30 @@ async function deleteListing(id){
 document.addEventListener('keydown', e=>{ if(e.ctrlKey && (e.key==='x'||e.key==='X')){ e.preventDefault(); openAdmin(); } });
 
 /* ---------- INIT ---------- */
+function toggleMobileNav(){
+  const nav = document.getElementById('nav');
+  const btn = document.getElementById('nav-toggle');
+  const open = nav.classList.toggle('nav-open');
+  if(btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+function closeMobileNav(){
+  const nav = document.getElementById('nav');
+  const btn = document.getElementById('nav-toggle');
+  if(nav) nav.classList.remove('nav-open');
+  if(btn) btn.setAttribute('aria-expanded', 'false');
+}
+function initMobileNav(){
+  const nav = document.getElementById('nav');
+  if(nav) nav.addEventListener('click', e=>{ if(e.target.closest('a')) closeMobileNav(); });
+}
 async function init(){
   initCategories();
   initFormSuggestions();
+  initLivraisonOptions();
+  initMobileNav();
   await loadListings();
   await loadMessages();
+  await loadThreadTitles();
   await loadCart();
   await loadFavorites();
   await loadTransactions();
