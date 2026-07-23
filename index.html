@@ -454,6 +454,7 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
       <input id="login-email" name="login-email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
       <label>Mot de passe</label>
       <input id="login-password" name="login-password" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      <button type="button" class="linklike" style="display:block;margin-top:8px;font-size:.85rem" onclick="forgotPassword()">Mot de passe oublié ?</button>
       <button class="btn" style="margin-top:16px;width:100%" onclick="doLogin()">Se connecter</button>
     </div>
     <div id="auth-tab-register" style="display:none">
@@ -1182,6 +1183,9 @@ async function doRegister(){
     updateAccountNav(); closeModal('modal-auth');
     showToast("Compte créé, bienvenue !");
   }catch(e){ showToast("Impossible de contacter le serveur de comptes"); }
+}
+function forgotPassword(){
+  showToast("Réinitialisation par e-mail pas encore disponible. Écrivez-nous à gofranckygo@gmail.com en attendant.");
 }
 async function doLogin(){
   const email = document.getElementById('login-email').value.trim();
