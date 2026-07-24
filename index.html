@@ -880,7 +880,7 @@ async function loadListings(){
   catch(e){ listings = []; }
 }
 async function saveListings(){ try{ await window.storage.set(LISTINGS_KEY, JSON.stringify(listings), true); }catch(e){ showToast("Erreur d'enregistrement"); } }
-async async function loadMessages(){
+async function loadMessages(){
   const email = getMyEmail();
   if(!LISTINGS_API_BASE || !email){ myThreads = []; currentThreadMsgs = []; return; }
   try{
@@ -1784,7 +1784,7 @@ function renderMessagesPage(){
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function escapeAttr(s){ s = String(s==null?'':s); s = s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); s = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); return s; }
-async function getMyEmail(){
+function getMyEmail(){
   if(typeof currentUser !== 'undefined' && currentUser && currentUser.email) return currentUser.email;
   return window.storage.get('moretvia-guest-email', false) || null;
 }
