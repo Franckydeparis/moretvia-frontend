@@ -1476,10 +1476,10 @@ function updateCartBadge(){
 function renderCartPage(){
   const el = document.getElementById('cart-content');
   const items = cart.map(id=>listings.find(l=>l.id===id)).filter(Boolean);
-  if(!items.length){ el.innerHTML = '<p class="empty">Votre panier est vide.</p>'; documen document.getElementById('cart-trust-badge').style.display='none';t.getElementById('cart-total').style.display='none'; document.getElementById('pay-btn').style.display='none'; return; }
+  if(!items.length){ el.innerHTML = '<p class="empty">Votre panier est vide.</p>'; document.getElementById('cart-total').style.display='none';document.getElementById('cart-trust-badge').style.display='none'; document.getElementById('pay-btn').style.display='none'; return; }
   let total=0;
   el.innerHTML = items.map(l=>{ total+=effectivePrice(l); const priceHtml = isOnSale(l) ? `<span style="text-decoration:line-through;opacity:.6;margin-right:6px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>` : fmtPrice(l.prix); return `<div class="admin-item"><img src="${escapeHtml(thumb(l))}"><div class="info"><div class="t">${escapeHtml(l.titre)}</div><div>${priceHtml}</div></div><button class="iconbtn" onclick="removeCart(${l.id})">Retirer</button></div>`; }).join('');
-  document document.getElementById('cart-trust-badge').style.display='block';.getElementById('cart-total').style.display='block';
+  document.getElementById('cart-total').style.display='block';document.getElementById('cart-trust-badge').style.display='block';
   document.getElementById('cart-total').textContent = 'Total : '+fmtPrice(total);
   document.getElementById('pay-btn').style.display='inline-block';
 }
@@ -1519,7 +1519,7 @@ async function simulatePayment(){
     ${freeNote}
     <p style="margin-top:10px">Le(s) vendeur(s) va(vont) être notifié(s) et vous contacter pour convenir de la remise du bien et du paiement réel.</p>
   </div>`;
-  documen document.getElementById('cart-trust-badge').style.display='none';t.getElementById('cart-total').style.display='none';
+  document.getElementById('cart-total').style.display='none';document.getElementById('cart-trust-badge').style.display='none';
   document.getElementById('pay-btn').style.display='none';
   showToast("Commande test enregistrée — aucun paiement réel effectué.");
 }
