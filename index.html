@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moretvia.fr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
 html{background:#fff;overflow-x:hidden}
@@ -172,6 +175,30 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
 .admin-verify-toggle{display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:normal}
 .construction-ribbon{position:fixed;top:14px;right:-46px;width:200px;transform:rotate(45deg);background:#f43f5e;color:#fff;text-align:center;font-weight:900;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;padding:6px 0;box-shadow:0 4px 10px rgba(0,0,0,.35);z-index:9999;pointer-events:none}
 @media (max-width:480px){.construction-ribbon{font-size:.6rem;width:170px;top:10px;right:-50px}}
+
+/* ===== Refonte premium ===== */
+:root{--mv-shadow-soft:0 10px 28px rgba(59,7,100,.18);--mv-shadow-lift:0 24px 48px rgba(59,7,100,.38)}
+body{font-family:'Inter',Arial,Helvetica,sans-serif}
+h1,h2,h3,h4,header h1,.hero h2,.action,.btn,.stat b{font-family:'Poppins','Inter',Arial,sans-serif}
+.trust-icon{width:16px;height:16px;display:inline-block;vertical-align:-3px;margin-right:4px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+.hero-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px);padding:9px 16px;border-radius:999px;font-size:.85rem;font-weight:600}
+.hero-pill svg{width:16px;height:16px;flex-shrink:0}
+.card .body{padding:16px}
+.card-meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.mini-tag{display:inline-flex;align-items:center;gap:4px;font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.14);white-space:nowrap;letter-spacing:.01em}
+.mini-tag svg{width:11px;height:11px;flex-shrink:0}
+.mini-tag.verified{background:#22c55e;color:#06210f}
+.mini-tag.trustscore{background:#facc15;color:#3b0764}
+.card-time{font-size:.7rem;opacity:.68;margin-top:6px;display:flex;align-items:center;gap:4px}
+.card-time svg{width:11px;height:11px}
+@keyframes mvFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.grid .card{animation:mvFadeUp .45s ease both}
+.action svg,.iconbtn svg,.btn svg{width:15px;height:15px;vertical-align:-3px;margin-right:6px;flex-shrink:0}
+.section-icon{width:22px;height:22px;vertical-align:-5px;margin-right:8px;color:#fff}
+.confiance-vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.confiance-vs .vs-item{background:rgba(255,255,255,.08);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,.14)}
+.confiance-vs .vs-item svg{width:24px;height:24px;color:#22c55e;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -187,8 +214,8 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
         </linearGradient>
       </defs>
       <rect x="4" y="4" width="192" height="192" rx="44" fill="#ffffff"/>
-      <path d="M54,136 V69 L100,111 L146,69 V136" fill="none" stroke="url(#markGradL)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="100" cy="42" r="11" fill="url(#markGradL)"/>
+      <path d="M100 24 L158 46 V96 C158 136 132 166 100 178 C68 166 42 136 42 96 V46 Z" fill="none" stroke="url(#markGradL)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M70 98 L92 121 L136 74" fill="none" stroke="url(#markGradL)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <div class="header-text">
       <h1>Moretvia.fr</h1>
@@ -202,8 +229,8 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
         </linearGradient>
       </defs>
       <rect x="4" y="4" width="192" height="192" rx="44" fill="#ffffff"/>
-      <path d="M54,136 V69 L100,111 L146,69 V136" fill="none" stroke="url(#markGradR)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="100" cy="42" r="11" fill="url(#markGradR)"/>
+      <path d="M100 24 L158 46 V96 C158 136 132 166 100 178 C68 166 42 136 42 96 V46 Z" fill="none" stroke="url(#markGradR)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M70 98 L92 121 L136 74" fill="none" stroke="url(#markGradR)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
 </header>
@@ -227,8 +254,14 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
   <!-- ACCUEIL -->
   <section class="page" id="page-accueil">
     <div class="hero">
-      <h2>Achetez, vendez et échangez en toute simplicité</h2>
+      <h2>La nouvelle marketplace française pensée pour acheter et vendre en toute confiance.</h2>
       <p>Des milliers d'annonces, publiez vos produits en quelques clics et trouvez rapidement ce que vous cherchez.</p>
+      <div class="hero-pills">
+        <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg> Paiement sécurisé</span>
+        <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.3l2.3 2.3 4.7-5"/></svg> Vendeurs vérifiés</span>
+        <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="5.5" cy="18.5" r="1.6"/><circle cx="17.5" cy="18.5" r="1.6"/></svg> Livraison partout en France</span>
+        <span class="hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0116 0v1"/><rect x="2" y="13" width="4.5" height="6" rx="1.5"/><rect x="17.5" y="13" width="4.5" height="6" rx="1.5"/></svg> Support français</span>
+      </div>
       
 <div style="max-width:640px;margin:24px auto">
 <input id="hero-search" placeholder="Rechercher un produit, une marque, une ville..." onkeydown="if(event.key==='Enter')heroSearch()" style="width:100%;padding:16px 20px;border:none;border-radius:18px;font-size:1rem;box-shadow:0 12px 28px rgba(0,0,0,.28);background:#7c3aed;color:#fff">
@@ -361,8 +394,14 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
 
 <!-- Trust system -->
 <section class="page" id="page-confiance">
-<h3>Indice de confiance</h3>
+<h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg> Indice de confiance</h3>
 <p class="small">Chaque vendeur affiche un indice de confiance sur 100, calculé à partir de la note moyenne laissée par les acheteurs (40 pts), du nombre de ventes réussies (25 pts), de l'ancienneté du compte (15 pts), de la vérification d'identité par l'équipe Moretvia.fr (10 pts) et du taux de réponse aux messages (10 pts). Cliquez sur le nom d'un vendeur depuis une annonce pour voir le détail et les avis laissés par d'autres acheteurs.</p>
+<div class="confiance-vs">
+<div class="vs-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg><b>Paiement 100% sécurisé</b><p class="small" style="margin-top:4px">Contrairement aux petites annonces classiques, vos règlements passent par Stripe : vos coordonnées bancaires ne sont jamais partagées avec le vendeur.</p></div>
+<div class="vs-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.3l2.3 2.3 4.7-5"/></svg><b>Vendeurs identifiés</b><p class="small" style="margin-top:4px">Un badge « vérifié » distingue les vendeurs dont l’identité a été contrôlée par notre équipe.</p></div>
+<div class="vs-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><b>Messagerie intégrée</b><p class="small" style="margin-top:4px">Toutes les conversations restent sur la plateforme, pour garder une trace en cas de litige.</p></div>
+<div class="vs-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 015 5v3a5 5 0 01-10 0V7a5 5 0 015-5z"/><path d="M5 11v1a7 7 0 0014 0v-1M12 19v3"/></svg><b>Support français réactif</b><p class="small" style="margin-top:4px">Une équipe basée en France répond à vos questions, avant et après chaque transaction.</p></div>
+</div>
 </section>
 
 </main>
@@ -1019,6 +1058,21 @@ function renderAnnonces(){
 function fmtPrice(p){ return Number(p).toLocaleString('fr-FR')+' €'; }
 function isOnSale(l){ return !!(l.soldePrix && l.soldeExpire && l.soldeExpire > Date.now()); }
 function effectivePrice(l){ return isOnSale(l) ? l.soldePrix : l.prix; }
+const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg>';
+const ICON_STAR = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7L6 21l1.6-7L2.2 9.3l7.1-.7z"/></svg>';
+const ICON_SHIELD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>';
+const ICON_TRUCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="5.5" cy="18.5" r="1.6"/><circle cx="17.5" cy="18.5" r="1.6"/></svg>';
+const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
+function timeAgo(ts){
+  if(!ts) return '';
+  const s = Math.max(0, Math.floor((Date.now()-ts)/1000));
+  if(s<60) return "à l'instant";
+  const m = Math.floor(s/60); if(m<60) return 'il y a '+m+' min';
+  const h = Math.floor(m/60); if(h<24) return 'il y a '+h+'h';
+  const d = Math.floor(h/24); if(d<30) return 'il y a '+d+' j';
+  const mo = Math.floor(d/30); if(mo<12) return 'il y a '+mo+' mois';
+  const y = Math.floor(mo/12); return 'il y a '+y+' an'+(y>1?'s':'');
+}
 function cardHtml(l){
   const isFav = favorites.includes(l.id);
   const sold = !!l.vendu;
@@ -1026,6 +1080,8 @@ function cardHtml(l){
   const priceHtml = onSale
     ? `<span style="text-decoration:line-through;opacity:.6;font-size:.9rem;margin-right:6px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>`
     : fmtPrice(l.prix);
+  const trust = computeTrust(l.email);
+  const hasDelivery = Array.isArray(l.livraison) && l.livraison.length>0;
   return `<div class="card ${sold?'sold':''}" onclick="openAd(${l.id})">
     <div style="position:relative">
       <img src="${escapeHtml(thumb(l))}" loading="lazy">
@@ -1037,6 +1093,13 @@ function cardHtml(l){
       <h4>${escapeHtml(l.titre)}</h4>
       <div class="price">${priceHtml}</div>
       <div class="city">${escapeHtml(l.ville||'-')} · <span onclick="event.stopPropagation();openSellerProfileFromCard('${escapeAttr(l.email||'')}')" style="cursor:pointer">${trustBadgeHtml(l.email)}</span></div>
+      <div class="card-meta-row">
+        ${trust.verified ? '<span class="mini-tag verified">'+ICON_CHECK+' Vérifié</span>' : ''}
+        ${trust.hasRating ? '<span class="mini-tag trustscore">'+ICON_STAR+' '+trust.score+'/100</span>' : ''}
+        <span class="mini-tag">${ICON_SHIELD} Paiement sécurisé</span>
+        ${hasDelivery ? '<span class="mini-tag">'+ICON_TRUCK+' Livraison possible</span>' : ''}
+      </div>
+      <div class="card-time">${ICON_CLOCK} Publié ${timeAgo(l.ts)}</div>
       <div class="row">
         <button class="iconbtn fav ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav(${l.id})">Favori</button>
         ${sold ? '' : `<button class="iconbtn" onclick="event.stopPropagation();addCart(${l.id})">Ajouter</button>
