@@ -1058,9 +1058,9 @@ function placeholderImg(seed){
 }
 function thumb(l){ return (l.images && l.images.length) ? l.images[0] : placeholderImg(l.id); }
 function applyFilters(){
-  const term = (document.getElementById('f-search').value||'').toLowerCase();
+  const term = (document.getElementById('f-search').value||'').trim().toLowerCase();
   const cat = document.getElementById('f-cat').value;
-  const ville = (document.getElementById('f-ville').value||'').toLowerCase();
+  const ville = (document.getElementById('f-ville').value||'').trim().toLowerCase();
   const maxPrice = parseFloat(document.getElementById('f-prix').value);
   const hideSoldEl = document.getElementById('f-hide-sold');
   const hideSold = hideSoldEl ? hideSoldEl.checked : true;
@@ -1075,18 +1075,6 @@ function applyFilters(){
 function renderAnnonces(){
   const el = document.getElementById('ads');
   if(listingsLoadError){ el.innerHTML = '<p class="empty">Impossible de charger les annonces pour le moment. Vérifiez votre connexion et réessayez.</p>'; return; }
-  if(new URLSearchParams(location.search).get('debug')==='1'){
-    var __f = applyFilters();
-    el.innerHTML = '<pre style="background:#fff;color:#000;padding:10px;border-radius:8px;white-space:pre-wrap;text-align:left">DEBUG\n' +
-      'listings.length=' + listings.length + '\n' +
-      'listingsLoadError=' + listingsLoadError + '\n' +
-      'LISTINGS_API_BASE=' + LISTINGS_API_BASE + '\n' +
-      'term=' + JSON.stringify((document.getElementById('f-search')||{}).value) + '\n' +
-      'filtered.length=' + __f.length + '\n' +
-      'titres=' + JSON.stringify(listings.slice(0,10).map(function(x){return x.titre;})) + '\n' +
-      'UA=' + navigator.userAgent + '</pre>';
-    return;
-  }
   const list = applyFilters();
   if(!list.length){ el.innerHTML = '<p class="empty">Aucune annonce ne correspond à ta recherche.</p>'; return; }
   el.innerHTML = list.map(cardHtml).join('');
