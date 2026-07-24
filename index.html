@@ -1027,7 +1027,7 @@ function cardHtml(l){
     : fmtPrice(l.prix);
   return `<div class="card ${sold?'sold':''}" onclick="openAd(${l.id})">
     <div style="position:relative">
-      <img src="${thumb(l)}" loading="lazy">
+      <img src="${escapeHtml(thumb(l))}" loading="lazy">
       ${sold ? '<div class="sold-badge">Vendu</div>' : ''}
       ${onSale ? '<div class="sold-badge" style="background:#f43f5e">Solde</div>' : ''}
     </div>
@@ -1035,7 +1035,7 @@ function cardHtml(l){
       <div class="cat-tag"><span class="cat-badge-sm">${CATEGORIES_SHORT[l.categorie]||'?'}</span>${escapeHtml(l.categorie||'')}</div>
       <h4>${escapeHtml(l.titre)}</h4>
       <div class="price">${priceHtml}</div>
-      <div class="city">${escapeHtml(l.ville||'-')} · <span onclick="event.stopPropagation();openSellerProfileFromCard('${(l.email||'').replace(/'/g,"\\'")}')" style="cursor:pointer">${trustBadgeHtml(l.email)}</span></div>
+      <div class="city">${escapeHtml(l.ville||'-')} · <span onclick="event.stopPropagation();openSellerProfileFromCard('${escapeAttr(l.email||'')}')" style="cursor:pointer">${trustBadgeHtml(l.email)}</span></div>
       <div class="row">
         <button class="iconbtn fav ${isFav?'active':''}" onclick="event.stopPropagation();toggleFav(${l.id})">Favori</button>
         ${sold ? '' : `<button class="iconbtn" onclick="event.stopPropagation();addCart(${l.id})">Ajouter</button>
@@ -1049,7 +1049,7 @@ let currentAdImages = [];
 let currentAdImgIndex = 0;
 function renderAdGallery(){
   document.getElementById('ad-img').src = currentAdImages[currentAdImgIndex];
-  document.getElementById('ad-thumbs').innerHTML = currentAdImages.map((img,i)=>`<img src="${img}" class="${i===currentAdImgIndex?'active':''}" onclick="currentAdImgIndex=${i};renderAdGallery()">`).join('');
+  document.getElementById('ad-thumbs').innerHTML = currentAdImages.map((img,i)=>`<img src="${escapeHtml(img)}" class="${i===currentAdImgIndex?'active':''}" onclick="currentAdImgIndex=${i};renderAdGallery()">`).join('');
   const multi = currentAdImages.length > 1;
   document.getElementById('ad-gallery-prev').disabled = !multi;
   document.getElementById('ad-gallery-next').disabled = !multi;
@@ -1282,7 +1282,7 @@ function openEditPhotos(){
 }
 function renderEditPhotosGrid(){
   const grid = document.getElementById('edit-photos-grid');
-  grid.innerHTML = editPhotosDraft.map((img,i)=>`<div class="edit-photo-thumb"><img src="${img}"><button class="rm" onclick="removeEditPhoto(${i})">×</button></div>`).join('');
+  grid.innerHTML = editPhotosDraft.map((img,i)=>`<div class="edit-photo-thumb"><img src="${escapeHtml(img)}"><button class="rm" onclick="removeEditPhoto(${i})">×</button></div>`).join('');
   document.getElementById('edit-upload-zone').style.display = editPhotosDraft.length >= 4 ? 'none' : 'block';
 }
 function removeEditPhoto(i){
@@ -1477,7 +1477,7 @@ function renderCartPage(){
   const items = cart.map(id=>listings.find(l=>l.id===id)).filter(Boolean);
   if(!items.length){ el.innerHTML = '<p class="empty">Votre panier est vide.</p>'; document.getElementById('cart-total').style.display='none'; document.getElementById('pay-btn').style.display='none'; return; }
   let total=0;
-  el.innerHTML = items.map(l=>{ total+=effectivePrice(l); const priceHtml = isOnSale(l) ? `<span style="text-decoration:line-through;opacity:.6;margin-right:6px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>` : fmtPrice(l.prix); return `<div class="admin-item"><img src="${thumb(l)}"><div class="info"><div class="t">${escapeHtml(l.titre)}</div><div>${priceHtml}</div></div><button class="iconbtn" onclick="removeCart(${l.id})">Retirer</button></div>`; }).join('');
+  el.innerHTML = items.map(l=>{ total+=effectivePrice(l); const priceHtml = isOnSale(l) ? `<span style="text-decoration:line-through;opacity:.6;margin-right:6px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>` : fmtPrice(l.prix); return `<div class="admin-item"><img src="${escapeHtml(thumb(l))}"><div class="info"><div class="t">${escapeHtml(l.titre)}</div><div>${priceHtml}</div></div><button class="iconbtn" onclick="removeCart(${l.id})">Retirer</button></div>`; }).join('');
   document.getElementById('cart-total').style.display='block';
   document.getElementById('cart-total').textContent = 'Total : '+fmtPrice(total);
   document.getElementById('pay-btn').style.display='inline-block';
@@ -1658,6 +1658,7 @@ function renderMessagesPage(){
   }).join('');
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s){ s = String(s==null?'':s); s = s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); s = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); return s; }
 async function sendMessage(id, from){
   from = from || 'visiteur';
   const input = document.getElementById('thread-input-'+id) || document.getElementById('admin-thread-input-'+id);
