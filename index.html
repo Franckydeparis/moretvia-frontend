@@ -1826,6 +1826,7 @@ async function sendMessage(){
     }
     input.value = '';
     await loadMessages();
+    showToast('Message envoyé ✓');
     renderMessagesPage();
   }catch(e){
     showToast(e.message || "Impossible d'envoyer le message, vérifiez votre connexion");
