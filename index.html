@@ -345,6 +345,7 @@ footer .cols{justify-content:space-between!important;gap:24px!important;flex-wra
     <h3 style="margin-top:0">Panier</h3>
     <div id="cart-content"></div>
     <div id="cart-total" style="margin-top:20px;font-size:1.3rem;font-weight:900;display:none"></div>
+    <div id="cart-trust-badge" class="trust-payment-badge" style="margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.12);font-size:.9rem;line-height:1.4;display:none">🔒 <b>Paiement 100% sécurisé par Stripe</b> — vos données bancaires ne transitent jamais par Moretvia.fr et ne sont jamais stockées. Vous ne prenez aucun risque.</div>
     <button class="btn" id="pay-btn" style="margin-top:16px;display:none" onclick="simulatePayment()">Valider la commande (paiement test, aucun débit réel)</button>
   </section>
 
@@ -1475,10 +1476,10 @@ function updateCartBadge(){
 function renderCartPage(){
   const el = document.getElementById('cart-content');
   const items = cart.map(id=>listings.find(l=>l.id===id)).filter(Boolean);
-  if(!items.length){ el.innerHTML = '<p class="empty">Votre panier est vide.</p>'; document.getElementById('cart-total').style.display='none'; document.getElementById('pay-btn').style.display='none'; return; }
+  if(!items.length){ el.innerHTML = '<p class="empty">Votre panier est vide.</p>'; documen document.getElementById('cart-trust-badge').style.display='none';t.getElementById('cart-total').style.display='none'; document.getElementById('pay-btn').style.display='none'; return; }
   let total=0;
   el.innerHTML = items.map(l=>{ total+=effectivePrice(l); const priceHtml = isOnSale(l) ? `<span style="text-decoration:line-through;opacity:.6;margin-right:6px">${fmtPrice(l.prix)}</span><span style="color:#f43f5e">${fmtPrice(l.soldePrix)}</span>` : fmtPrice(l.prix); return `<div class="admin-item"><img src="${escapeHtml(thumb(l))}"><div class="info"><div class="t">${escapeHtml(l.titre)}</div><div>${priceHtml}</div></div><button class="iconbtn" onclick="removeCart(${l.id})">Retirer</button></div>`; }).join('');
-  document.getElementById('cart-total').style.display='block';
+  document document.getElementById('cart-trust-badge').style.display='block';.getElementById('cart-total').style.display='block';
   document.getElementById('cart-total').textContent = 'Total : '+fmtPrice(total);
   document.getElementById('pay-btn').style.display='inline-block';
 }
@@ -1518,7 +1519,7 @@ async function simulatePayment(){
     ${freeNote}
     <p style="margin-top:10px">Le(s) vendeur(s) va(vont) être notifié(s) et vous contacter pour convenir de la remise du bien et du paiement réel.</p>
   </div>`;
-  document.getElementById('cart-total').style.display='none';
+  documen document.getElementById('cart-trust-badge').style.display='none';t.getElementById('cart-total').style.display='none';
   document.getElementById('pay-btn').style.display='none';
   showToast("Commande test enregistrée — aucun paiement réel effectué.");
 }
