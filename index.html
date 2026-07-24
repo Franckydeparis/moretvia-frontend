@@ -204,6 +204,18 @@ h1,h2,h3,h4,header h1,.hero h2,.action,.btn,.stat b{font-family:'Poppins','Inter
 .confiance-vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
 .confiance-vs .vs-item{background:rgba(255,255,255,.08);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,.14)}
 .confiance-vs .vs-item svg{width:24px;height:24px;color:#22c55e;margin-bottom:8px}
+
+.thread-list{display:flex;flex-direction:column;gap:10px;}
+.thread-item{background:#fff;border:1px solid #eee;border-radius:12px;padding:14px 16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:transform .15s ease,box-shadow .15s ease;}
+.thread-item:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.10);}
+.thread-item-title{font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.thread-item-last{color:#666;font-size:.92em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.thread-item-time{color:#999;font-size:.82em;margin-top:4px;}
+.thread-back{margin-bottom:10px;}
+.linklike{background:none;border:none;color:#7c3aed;font-weight:600;cursor:pointer;padding:4px 0;font-size:.95em;}
+.linklike:hover{text-decoration:underline;}
+.admin-msgs-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding:10px 12px;background:#f7f5ff;border-radius:10px;}
+.admin-msg-select{margin-bottom:6px;display:inline-block;}
 </style>
 </head>
 <body>
@@ -832,6 +844,9 @@ function resetPubLivraison(){
 let listings = [];
 let listingsLoadError = false;
 let messages = {};
+let myThreads = [];
+let openThreadBuyerEmail = null;
+let currentThreadMsgs = [];
 let cart = [];
 let favorites = [];
 let uploadedImages = [];
@@ -865,17 +880,21 @@ async function loadListings(){
   catch(e){ listings = []; }
 }
 async function saveListings(){ try{ await window.storage.set(LISTINGS_KEY, JSON.stringify(listings), true); }catch(e){ showToast("Erreur d'enregistrement"); } }
-async function loadMessages(){
-  if(LISTINGS_API_BASE){
+async async function loadMessages(){
+  const email = getMyEmail();
+  if(!LISTINGS_API_BASE || !email){ myThreads = []; currentThreadMsgs = []; return; }
+  try{
+    const res = await fetch(LISTINGS_API_BASE+'/api/messages/inbox?email='+encodeURIComponent(email));
+    myThreads = res.ok ? await res.json() : [];
+  }catch(e){ myThreads = []; }
+  if(openThreadId !== null && openThreadBuyerEmail){
     try{
-      const res = await fetch(LISTINGS_API_BASE+'/api/messages');
-      if(res.ok){ messages = await res.json(); return; }
-    }catch(e){}
-    messages = {};
-    return;
+      const res2 = await fetch(LISTINGS_API_BASE+'/api/messages/thread?listingId='+encodeURIComponent(openThreadId)+'&buyerEmail='+encodeURIComponent(openThreadBuyerEmail));
+      currentThreadMsgs = res2.ok ? await res2.json() : [];
+    }catch(e){ currentThreadMsgs = []; }
+  } else {
+    currentThreadMsgs = [];
   }
-  try{ const res = await window.storage.get(MESSAGES_KEY, true); messages = res && res.value ? JSON.parse(res.value) : {}; }
-  catch(e){ messages = {}; }
 }
 async function saveMessages(){ try{ await window.storage.set(MESSAGES_KEY, JSON.stringify(messages), true); }catch(e){} }
 async function loadCart(){
@@ -1704,53 +1723,115 @@ async function submitReview(){
 
 /* ---------- MESSAGES ---------- */
 let openThreadId = null;
-function openMessages(listingId){
+async function openMessages(listingId){
+  const contact = await ensureMyContact();
+  if(!contact) return;
   openThreadId = listingId;
+  openThreadBuyerEmail = contact.email;
   showPage('messages');
 }
+
+async function openThreadFromInbox(listingId, buyerEmail){
+  openThreadId = listingId;
+  openThreadBuyerEmail = buyerEmail;
+  await loadMessages();
+  renderMessagesPage();
+}
+
+function closeThread(){
+  openThreadId = null;
+  openThreadBuyerEmail = null;
+  renderMessagesPage();
+}
+
 function renderMessagesPage(){
   const el = document.getElementById('messages-list');
-  const ids = Object.keys(messages).map(Number);
-  const allIds = [...new Set([...(openThreadId!==null?[openThreadId]:[]), ...ids])];
-  if(!allIds.length){ el.innerHTML = '<p class="empty">Aucune conversation pour le moment. Ouvrez une annonce et cliquez sur "Contacter le vendeur".</p>'; return; }
-  el.innerHTML = allIds.map(id=>{
-    const l = listings.find(x=>x.id===id);
-    const thread = messages[id] || [];
-    return `<div class="thread">
-      <h4>${escapeHtml(threadTitleFor(id, l))}</h4>
-      <div class="msgs-box" id="thread-msgs-${id}">${thread.map(m=>`<div class="msg ${m.from}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message. Envoyez le premier !</p>'}</div>
-      <div class="msg-input">
-        <input id="thread-input-${id}" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter')sendMessage(${id})">
-        <button onclick="sendMessage(${id})">Envoyer</button>
-      </div>
+  const myEmail = getMyEmail();
+  if(!myEmail){
+    el.innerHTML = '<p class="empty">Ouvrez une annonce et cliquez sur "Contacter le vendeur" pour démarrer une conversation.</p>';
+    return;
+  }
+  if(openThreadId !== null && openThreadBuyerEmail){
+    const l = listings.find(x=>String(x.id)===String(openThreadId));
+    const inInbox = myThreads.find(t=>String(t.listingId)===String(openThreadId) && t.buyerEmail===openThreadBuyerEmail);
+    const title = l ? l.titre : (inInbox ? inInbox.listingTitre : 'Annonce');
+    el.innerHTML = `<div class="thread-back"><button class="linklike" onclick="closeThread()">&larr; Toutes les conversations</button></div>
+      <div class="thread">
+        <h4>${escapeHtml(title)}</h4>
+        <div class="msgs-box" id="thread-msgs-current">${currentThreadMsgs.map(m=>`<div class="msg ${m.from}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message. Envoyez le premier !</p>'}</div>
+        <div class="msg-input">
+          <input id="thread-input-current" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter')sendMessage()">
+          <button onclick="sendMessage()">Envoyer</button>
+        </div>
+      </div>`;
+    const box = document.getElementById('thread-msgs-current');
+    if(box) box.scrollTop = box.scrollHeight;
+    return;
+  }
+  if(!myThreads.length){
+    el.innerHTML = '<p class="empty">Aucune conversation pour le moment. Ouvrez une annonce et cliquez sur "Contacter le vendeur".</p>';
+    return;
+  }
+  el.innerHTML = '<div class="thread-list">' + myThreads.map(t=>{
+    const lid = String(t.listingId).replace(/'/g,"\\'");
+    const be = String(t.buyerEmail).replace(/'/g,"\\'");
+    return `<div class="thread-item" onclick="openThreadFromInbox('${lid}','${be}')">
+      <div class="thread-item-title">${escapeHtml(t.listingTitre)}${t.role==='vendeur' ? ' <span class="mini-tag">Vendeur</span>' : ''}</div>
+      <div class="thread-item-last">${escapeHtml(t.lastMessage)}</div>
+      <div class="thread-item-time">${escapeHtml(timeAgo(t.lastTs))}</div>
     </div>`;
-  }).join('');
+  }).join('') + '</div>';
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function escapeAttr(s){ s = String(s==null?'':s); s = s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); s = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); return s; }
-async function sendMessage(id, from){
-  from = from || 'visiteur';
-  const input = document.getElementById('thread-input-'+id) || document.getElementById('admin-thread-input-'+id);
-  const text = input.value.trim(); if(!text) return;
-  if(LISTINGS_API_BASE){
-    try{
-      const res = await fetch(LISTINGS_API_BASE+'/api/messages/'+id, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({from, text})
-      });
-      if(!res.ok) throw new Error('Echec envoi');
-    }catch(e){ showToast("Impossible d'envoyer le message, vérifiez votre connexion"); return; }
+async function getMyEmail(){
+  if(typeof currentUser !== 'undefined' && currentUser && currentUser.email) return currentUser.email;
+  return window.storage.get('moretvia-guest-email', false) || null;
+}
+function getMyNom(){
+  if(typeof currentUser !== 'undefined' && currentUser && currentUser.nom) return currentUser.nom;
+  return window.storage.get('moretvia-guest-nom', false) || '';
+}
+async function ensureMyContact(){
+  let email = getMyEmail();
+  if(email) return { email, nom: getMyNom() };
+  email = prompt('Pour contacter le vendeur, indiquez votre e-mail :');
+  if(!email) return null;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast('E-mail invalide'); return null; }
+  const nom = prompt('Votre nom (optionnel) :') || '';
+  window.storage.set('moretvia-guest-email', email);
+  if(nom) window.storage.set('moretvia-guest-nom', nom);
+  return { email, nom };
+}
+async function sendMessage(){
+  const input = document.getElementById('thread-input-current');
+  if(!input) return;
+  const text = input.value.trim();
+  if(!text) return;
+  if(openThreadId === null){ showToast("Ouvrez une conversation avant d'envoyer un message"); return; }
+  const contact = await ensureMyContact();
+  if(!contact) return;
+  if(!openThreadBuyerEmail) openThreadBuyerEmail = contact.email;
+  if(!LISTINGS_API_BASE){ showToast('Messagerie momentanément indisponible'); return; }
+  input.disabled = true;
+  try{
+    const res = await fetch(LISTINGS_API_BASE+'/api/messages/thread', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ listingId: openThreadId, buyerEmail: openThreadBuyerEmail, buyerNom: contact.nom, senderEmail: contact.email, text })
+    });
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      throw new Error(err.error || "Échec de l'envoi");
+    }
+    input.value = '';
     await loadMessages();
-  } else {
-    if(!messages[id]) messages[id]=[];
-    messages[id].push({from, text, ts:Date.now()});
-    await saveMessages();
+    renderMessagesPage();
+  }catch(e){
+    showToast(e.message || "Impossible d'envoyer le message, vérifiez votre connexion");
+  } finally {
+    input.disabled = false;
   }
-  input.value='';
-  if(document.getElementById('page-messages').style.display==='block') renderMessagesPage();
-  if(adminUnlocked) renderAdminMessages();
-  showToast("Message envoyé");
 }
 
 /* ---------- MODALS / TOAST ---------- */
@@ -2145,58 +2226,96 @@ async function deleteSelectedListings(){
 function adminOpenMessages(id){ setAdminTab('msgs'); openThreadId=id; renderAdminMessages(); }
 function renderAdminMessages(){
   const el = document.getElementById('admin-tab-msgs');
-  const ids = [...new Set([...(openThreadId!==null?[openThreadId]:[]), ...Object.keys(messages).map(Number)])];
-  selectedMsgIds = selectedMsgIds.filter(id=>ids.includes(id));
-  if(!ids.length){ el.innerHTML = '<p class="empty">Aucun message.</p>'; return; }
-  const allChecked = ids.length && ids.every(id=>selectedMsgIds.includes(id));
-  const header = `<div class="admin-item" style="background:transparent;border:none;padding:6px 10px">
-      <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin:0">
-        <input type="checkbox" id="msg-select-all" style="width:auto" ${allChecked?'checked':''} onchange="toggleSelectAllMsgs(this.checked)"> Tout sélectionner
-      </label>
-      <button class="iconbtn" style="display:${selectedMsgIds.length?'inline-block':'none'}" onclick="deleteSelectedThreads()">Supprimer la sélection (<span id="msg-selected-count">${selectedMsgIds.length}</span>)</button>
-    </div>`;
-  el.innerHTML = header + ids.map(id=>{
-    const l = listings.find(x=>x.id===id);
-    const thread = messages[id] || [];
-    return `<div class="thread">
-      <label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin-bottom:8px">
-        <input type="checkbox" style="width:auto" ${selectedMsgIds.includes(id)?'checked':''} onchange="toggleMsgSelected(${id}, this.checked)">
-        <h4 style="margin:0;border-bottom:none;padding-bottom:0">${escapeHtml(threadTitleFor(id, l))}</h4>
-      </label>
-      <div class="msgs-box">${thread.map(m=>`<div class="msg ${m.from==='vendeur'?'vendeur':'visiteur'}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message.</p>'}</div>
+  if(el) el.innerHTML = '<p class="empty">Chargement…</p>';
+  fetchAdminMessages();
+}
+
+let adminThreads = [];
+let selectedMsgIds = [];
+
+async function fetchAdminMessages(){
+  const el = document.getElementById('admin-tab-msgs');
+  if(!el) return;
+  if(!LISTINGS_API_BASE || !window.__adminToken){ el.innerHTML = '<p class="empty">Non connecté en tant qu\'admin.</p>'; return; }
+  try{
+    const res = await fetch(LISTINGS_API_BASE+'/api/messages', { headers:{ 'Authorization':'Bearer '+window.__adminToken } });
+    if(!res.ok){ el.innerHTML = '<p class="empty">Erreur de chargement des messages.</p>'; return; }
+    const raw = await res.json();
+    adminThreads = Object.keys(raw).map(key=>{
+      const sep = key.indexOf('::');
+      const listingId = sep>=0 ? key.slice(0, sep) : key;
+      const buyerEmail = sep>=0 ? key.slice(sep+2) : '';
+      const l = listings.find(x=>String(x.id)===String(listingId));
+      const msgs = raw[key] || [];
+      const last = msgs[msgs.length-1];
+      return { key, listingId, buyerEmail, titre: l ? l.titre : 'Annonce supprimée', msgs, lastTs: last ? last.ts : 0 };
+    }).sort((a,b)=>b.lastTs-a.lastTs);
+    selectedMsgIds = selectedMsgIds.filter(k=>adminThreads.some(t=>t.key===k));
+    renderAdminMessagesList();
+  }catch(e){
+    el.innerHTML = '<p class="empty">Erreur de chargement des messages.</p>';
+  }
+}
+
+function renderAdminMessagesList(){
+  const el = document.getElementById('admin-tab-msgs');
+  if(!el) return;
+  if(!adminThreads.length){ el.innerHTML = '<p class="empty">Aucune conversation.</p>'; return; }
+  el.innerHTML = '<div class="admin-msgs-toolbar"><label><input type="checkbox" onchange="toggleSelectAllMsgs(this.checked)" '+(selectedMsgIds.length===adminThreads.length?'checked':'')+'> Tout sélectionner</label><button class="btn small" onclick="deleteSelectedThreads()">Supprimer la sélection</button></div>' +
+    adminThreads.map(t=>{
+      const safeKey = t.key.replace(/'/g,"\\'");
+      return `<div class="thread">
+      <label class="admin-msg-select"><input type="checkbox" ${selectedMsgIds.includes(t.key)?'checked':''} onchange="toggleMsgSelected('${safeKey}', this.checked)"></label>
+      <h4>${escapeHtml(t.titre)} <span class="small">(${escapeHtml(t.buyerEmail)})</span></h4>
+      <div class="msgs-box" id="admin-thread-msgs-${escapeHtml(t.key)}">${t.msgs.map(m=>`<div class="msg ${m.from}">${escapeHtml(m.text)}</div>`).join('') || '<p class="small">Pas encore de message.</p>'}</div>
       <div class="msg-input">
-        <input id="admin-thread-input-${id}" placeholder="Répondre en tant que vendeur..." onkeydown="if(event.key==='Enter')sendMessage(${id},'vendeur')">
-        <button onclick="sendMessage(${id},'vendeur')">Envoyer</button>
+        <input id="admin-thread-input-${escapeHtml(t.key)}" placeholder="Répondre en tant que vendeur..." onkeydown="if(event.key==='Enter')adminReplyThread('${safeKey}')">
+        <button onclick="adminReplyThread('${safeKey}')">Envoyer</button>
       </div>
     </div>`;
-  }).join('');
+    }).join('');
 }
-function toggleMsgSelected(id, checked){
-  if(checked){ if(!selectedMsgIds.includes(id)) selectedMsgIds.push(id); }
-  else{ selectedMsgIds = selectedMsgIds.filter(x=>x!==id); }
-  renderAdminMessages();
+
+async function adminReplyThread(key){
+  const input = document.getElementById('admin-thread-input-'+key);
+  if(!input) return;
+  const text = input.value.trim();
+  if(!text) return;
+  const thread = adminThreads.find(t=>t.key===key);
+  if(!thread) return;
+  const l = listings.find(x=>String(x.id)===String(thread.listingId));
+  if(!l || !l.email){ showToast('Annonce introuvable, impossible de répondre'); return; }
+  try{
+    const res = await fetch(LISTINGS_API_BASE+'/api/messages/thread', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ listingId: thread.listingId, buyerEmail: thread.buyerEmail, senderEmail: l.email, text })
+    });
+    if(!res.ok){ const err = await res.json().catch(()=>({})); throw new Error(err.error||'Échec de l\'envoi'); }
+    input.value = '';
+    await fetchAdminMessages();
+  }catch(e){ showToast(e.message || "Impossible d'envoyer le message"); }
 }
+
+function toggleMsgSelected(key, checked){
+  if(checked){ if(!selectedMsgIds.includes(key)) selectedMsgIds.push(key); }
+  else { selectedMsgIds = selectedMsgIds.filter(k=>k!==key); }
+}
+
 function toggleSelectAllMsgs(checked){
-  const ids = [...new Set([...(openThreadId!==null?[openThreadId]:[]), ...Object.keys(messages).map(Number)])];
-  selectedMsgIds = checked ? ids : [];
-  renderAdminMessages();
+  selectedMsgIds = checked ? adminThreads.map(t=>t.key) : [];
+  renderAdminMessagesList();
 }
+
 async function deleteSelectedThreads(){
   if(!selectedMsgIds.length) return;
-  if(!confirm(`Supprimer les ${selectedMsgIds.length} conversation(s) sélectionnée(s) ?`)) return;
-  if(LISTINGS_API_BASE){
-    await Promise.all(selectedMsgIds.map(id=>
-      fetch(LISTINGS_API_BASE+'/api/messages/'+id, {method:'DELETE'}).catch(()=>{})
-    ));
-    await loadMessages();
-  } else {
-    selectedMsgIds.forEach(id=>{ delete messages[id]; });
-    await saveMessages();
-  }
-  if(openThreadId!==null && selectedMsgIds.includes(openThreadId)) openThreadId=null;
+  if(!confirm(selectedMsgIds.length+' conversation(s) sélectionnée(s) ?')) return;
+  if(!LISTINGS_API_BASE || !window.__adminToken) return;
+  await Promise.all(selectedMsgIds.map(key=>
+    fetch(LISTINGS_API_BASE+'/api/messages/'+encodeURIComponent(key), { method:'DELETE', headers:{ 'Authorization':'Bearer '+window.__adminToken } }).catch(()=>{})
+  ));
   selectedMsgIds = [];
-  renderAdminMessages();
-  showToast("Conversations supprimées");
+  await fetchAdminMessages();
 }
 async function deleteListing(id){
   if(!confirm("Supprimer cette annonce ?")) return;
